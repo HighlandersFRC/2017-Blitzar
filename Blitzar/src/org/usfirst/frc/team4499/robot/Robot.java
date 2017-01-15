@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
+import org.usfirst.frc.team4499.robot.OI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +26,17 @@ public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+	
+	// Variable Declarations
+	
+	private float flyWheelPower = 0;
+	private float receiverPower = 0;
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -94,6 +106,15 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		
+		RobotMap.rightMotorOne.setInverted(false);
+		RobotMap.rightMotorTwo.setInverted(false);
+		RobotMap.leftMotorOne.setInverted(true);
+		RobotMap.leftMotorTwo.setInverted(true);
+		
+		RobotMap.flywheel.set(0);
+		
+		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 	}
@@ -103,6 +124,71 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		
+		// Drive control
+		if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
+		RobotMap.leftMotorOne.set(-oi.joystickOne.getRawAxis(1)); // Up on joystick returns lower
+		RobotMap.leftMotorTwo.set(-oi.joystickOne.getRawAxis(1)); // Negative -> Correct direction
+		} else {
+			RobotMap.leftMotorOne.set(0); 
+			RobotMap.leftMotorTwo.set(0);
+		}
+		
+		if (Math.abs(oi.joystickOne.getRawAxis(5)) > 0.2) {
+		RobotMap.rightMotorOne.set(-oi.joystickOne.getRawAxis(5));
+		RobotMap.rightMotorTwo.set(-oi.joystickOne.getRawAxis(5));
+		} else {
+			RobotMap.rightMotorOne.set(0); 
+			RobotMap.rightMotorTwo.set(0);
+		}
+		
+		//System.out.println(oi.joystickOne.getRawAxis(5));
+		
+		
+		// Flywheel control
+		if (oi.flyWheelSpeedIncrease.get() == true) {
+			// Increase speed
+			flyWheelPower -= 0.01; // Negative is the correct direction, speed increase -> negative
+		}
+		if (oi.flyWheelSpeedDecrease.get() == true) {
+			flyWheelPower += 0.01; // Negative is the correct direction, speed decrease -> positive
+		}
+		if (flyWheelPower < -1) {
+			flyWheelPower = -1;
+		}
+		if (flyWheelPower > 0) {
+			flyWheelPower = 0;
+		}
+		RobotMap.flywheel.set (flyWheelPower);
+		SmartDashboard.putNumber("Flywheel power", -flyWheelPower);
+		SmartDashboard.putNumber("Flywheel Power value", -flyWheelPower);
+		System.out.println(flyWheelPower);
+		
+		// Receiver control
+		if (oi.receiverSpeedIncrease.get() == true) {
+			// Increase speed
+			receiverPower -= 0.01; // Negative is the correct direction, speed increase -> negative
+		}
+		if (oi.receiverSpeedDecrease.get() == true) {
+			receiverPower += 0.01; // Negative is the correct direction, speed decrease -> positive
+		}
+		if (receiverPower < -1) {
+			receiverPower = -1;
+		}
+		if (receiverPower > 0) {
+			receiverPower = 0;
+		}
+		RobotMap.receiverLeft.set(receiverPower);
+		RobotMap.receiverRight.set(receiverPower);
+		SmartDashboard.putNumber("Receiver Power", -receiverPower);
+		SmartDashboard.putNumber("Receiver Power value", -receiverPower);
+		System.out.println(flyWheelPower);
+		
+		
+		
+		
+		
 		Scheduler.getInstance().run();
 	}
 
