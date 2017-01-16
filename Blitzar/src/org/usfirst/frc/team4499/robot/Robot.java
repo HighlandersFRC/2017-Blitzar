@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team4499.robot.OI;
+import org.usfirst.frc.team4499.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,6 +29,8 @@ public class Robot extends IterativeRobot {
 	SendableChooser<Command> chooser = new SendableChooser<>();
 	
 	// Variable Declarations
+	
+	public static Flywheel flywheel = new Flywheel(); // Create a flywheel subsystem object
 	
 	private float flyWheelPower = 0;
 	private float receiverPower = 0;
@@ -146,24 +149,9 @@ public class Robot extends IterativeRobot {
 		//System.out.println(oi.joystickOne.getRawAxis(5));
 		
 		
-		// Flywheel control
-		if (oi.flyWheelSpeedIncrease.get() == true) {
-			// Increase speed
-			flyWheelPower -= 0.01; // Negative is the correct direction, speed increase -> negative
+		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
+			flywheel.controlFlywheel();
 		}
-		if (oi.flyWheelSpeedDecrease.get() == true) {
-			flyWheelPower += 0.01; // Negative is the correct direction, speed decrease -> positive
-		}
-		if (flyWheelPower < -1) {
-			flyWheelPower = -1;
-		}
-		if (flyWheelPower > 0) {
-			flyWheelPower = 0;
-		}
-		RobotMap.flywheel.set (flyWheelPower);
-		SmartDashboard.putNumber("Flywheel power", -flyWheelPower);
-		SmartDashboard.putNumber("Flywheel Power value", -flyWheelPower);
-		System.out.println(flyWheelPower);
 		
 		// Receiver control
 		if (oi.receiverSpeedIncrease.get() == true) {
@@ -183,7 +171,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.receiverRight.set(receiverPower);
 		SmartDashboard.putNumber("Receiver Power", -receiverPower);
 		SmartDashboard.putNumber("Receiver Power value", -receiverPower);
-		System.out.println(flyWheelPower);
+		System.out.println("receiverPower " + -receiverPower);
 		
 		
 		

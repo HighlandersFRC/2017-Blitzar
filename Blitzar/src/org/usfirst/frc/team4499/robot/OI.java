@@ -40,12 +40,12 @@ public class OI {
 	
 	///////////////////////////////////////////////////////////////////////////////////
 	
-	Joystick joystickOne = new Joystick(0);
+	public static Joystick joystickOne = new Joystick(0);
 	
-	JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4);
-	JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1);
-	JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 2);
-	JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 3);
+	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4);
+	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1);
+	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 2);
+	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 3);
 	
 	
 	
