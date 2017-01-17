@@ -130,7 +130,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
-		
+		System.out.println("shooter power: " +flyWheelPower);
 		// Drive control
 		if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
 		RobotMap.leftMotorOne.set(-oi.joystickOne.getRawAxis(1)); // Up on joystick returns lower
@@ -183,8 +183,8 @@ public class Robot extends IterativeRobot {
 			vortexPower = 0;
 		}
 		
-		RobotMap.vortexMotorOne.set(vortexPower);
-		RobotMap.vortexMotorTwo.set(vortexPower);
+		RobotMap.vortexMotorOne.set(-vortexPower);
+		RobotMap.vortexMotorTwo.set(-vortexPower);
 		
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
 		//SmartDashboard.putNumber("Receiver power", -receiverPower);
