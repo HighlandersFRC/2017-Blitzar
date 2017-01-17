@@ -19,6 +19,9 @@ public class RobotMap {
 	public static CANTalon flywheel = new CANTalon(5);
 	public static CANTalon receiverLeft = new CANTalon(6);
 	public static CANTalon receiverRight = new CANTalon(7);
+	public static CANTalon turretMotor = new CANTalon(8);
+	public static CANTalon vortexMotorOne = new CANTalon(9);
+	public static CANTalon vortexMotorTwo = new CANTalon(10);
 	
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:

@@ -42,15 +42,15 @@ public class OI {
 	
 	public static Joystick joystickOne = new Joystick(0);
 	
-	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4);
-	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1);
-	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 2);
-	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 3);
+	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4); // Y
+	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1); // A
+	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 2); // B
+	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 3); // X
 	
+	public static JoystickButton turretPanRight = new JoystickButton(joystickOne, 6); // Right bumper
+	public static JoystickButton turretPanLeft = new JoystickButton(joystickOne, 5); // Left bumper
 	
-	
-	
-	
-	
+	public static JoystickButton vortexSpeedDecrease = new JoystickButton(joystickOne, 7); // Back
+	public static JoystickButton vortexSpeedIncrease = new JoystickButton(joystickOne, 8); // Start
 	
 }

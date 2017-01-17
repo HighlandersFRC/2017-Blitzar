@@ -30,10 +30,12 @@ public class Robot extends IterativeRobot {
 	
 	// Variable Declarations
 	
-	public static Flywheel flywheel = new Flywheel(); // Create a flywheel subsystem object
+	public static Flywheel flywheel = new Flywheel(); // Construct a flywheel subsystem object
+	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
 	
-	private float flyWheelPower = 0;
-	private float receiverPower = 0;
+	public static float flyWheelPower = 0;
+	public static float receiverPower = 0;
+	public static float vortexPower = 0;
 	
 	
 	
@@ -148,30 +150,51 @@ public class Robot extends IterativeRobot {
 		
 		//System.out.println(oi.joystickOne.getRawAxis(5));
 		
-		
+		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			flywheel.controlFlywheel();
 		}
 		
-		// Receiver control
-		if (oi.receiverSpeedIncrease.get() == true) {
-			// Increase speed
-			receiverPower -= 0.01; // Negative is the correct direction, speed increase -> negative
+		// Control receiver
+		if (oi.receiverSpeedIncrease.get() || oi.receiverSpeedDecrease.get()) {
+			receiver.controlReceiver();
 		}
-		if (oi.receiverSpeedDecrease.get() == true) {
-			receiverPower += 0.01; // Negative is the correct direction, speed decrease -> positive
+		
+		// Control turret
+		if (oi.turretPanLeft.get()) {
+			RobotMap.turretMotor.set(0.2);
+		} else if (oi.turretPanRight.get()) {
+			RobotMap.turretMotor.set(-0.2);
+		} else {
+			RobotMap.turretMotor.set(0);
 		}
-		if (receiverPower < -1) {
-			receiverPower = -1;
+		
+		// Control vortex
+		if (oi.vortexSpeedIncrease.get()) {
+			vortexPower += 0.01;
 		}
-		if (receiverPower > 0) {
-			receiverPower = 0;
+		if (oi.vortexSpeedDecrease.get()){
+			vortexPower -= 0.01;
 		}
-		RobotMap.receiverLeft.set(receiverPower);
-		RobotMap.receiverRight.set(receiverPower);
-		SmartDashboard.putNumber("Receiver Power", -receiverPower);
-		SmartDashboard.putNumber("Receiver Power value", -receiverPower);
-		System.out.println("receiverPower " + -receiverPower);
+		if (vortexPower > 1) {
+			vortexPower = 1;
+		}
+		if (vortexPower < 0) {
+			vortexPower = 0;
+		}
+		
+		RobotMap.vortexMotorOne.set(vortexPower);
+		RobotMap.vortexMotorTwo.set(vortexPower);
+		
+		// Prints twice so that one can be a progress bar, and the other can be a raw value
+		//SmartDashboard.putNumber("Receiver power", -receiverPower);
+		//SmartDashboard.putNumber( "Receiver power value", -receiverPower);
+		System.out.println("vortexPower " + vortexPower);
+		
+		
+		
+		
+		
 		
 		
 		
