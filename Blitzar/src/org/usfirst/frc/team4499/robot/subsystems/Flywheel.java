@@ -19,9 +19,18 @@ public class Flywheel extends Subsystem {
 	public static float maxFlywheelVelocity = RobotStats.maxFlywheelVelocity; // Ticks per second
 	public static float maxFlywheelAcceleration = RobotStats.maxFlywheelAcceleration; // Ticks per second^2
 
-	public void controlFlywheel() {
+	public void controlFlywheelPercentVBus() {
 		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-		ControlFlywheel controlFlywheel = new ControlFlywheel();
+		ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.PercentVbus);
+		controlFlywheel.start();
+	}
+	
+	public void controlFlywheelVelocity() {
+		//RobotMap.flywheel.setP(0.02);
+		//RobotMap.flywheel.setD(0.5);
+		
+		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+		ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.Speed);
 		controlFlywheel.start();
 	}
 	

@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
+
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+
 import org.usfirst.frc.team4499.robot.OI;
 import org.usfirst.frc.team4499.robot.subsystems.*;
 
@@ -37,16 +41,11 @@ public class Robot extends IterativeRobot {
 	public static float receiverPower = 0;
 	public static float vortexPower = 0;
 	
-	
-	
-	
-	
-	
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	
 	@Override
 	public void robotInit() {
 		oi = new OI();
@@ -112,12 +111,27 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		
+		flyWheelPower = 0;
+		receiverPower = 0;
+		vortexPower = 0;
+		
+		
+		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
 		RobotMap.leftMotorOne.setInverted(true);
 		RobotMap.leftMotorTwo.setInverted(true);
 		
 		RobotMap.flywheel.set(0);
+		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		
+		
+		// Set flywheel RPM
+		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+		RobotMap.flywheel.set((500 * 4096) / 600);
+		
+		
+		
 		
 		
 		if (autonomousCommand != null)
@@ -130,7 +144,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
-		System.out.println("shooter power: " +flyWheelPower);
+		//System.out.println("shooter power: " + flyWheelPower);
 		// Drive control
 		if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
 		RobotMap.leftMotorOne.set(-oi.joystickOne.getRawAxis(1)); // Up on joystick returns lower
@@ -152,7 +166,7 @@ public class Robot extends IterativeRobot {
 		
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
-			flywheel.controlFlywheel();
+			flywheel.controlFlywheelVelocity();
 		}
 		
 		// Control receiver
@@ -189,13 +203,16 @@ public class Robot extends IterativeRobot {
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
 		//SmartDashboard.putNumber("Receiver power", -receiverPower);
 		//SmartDashboard.putNumber( "Receiver power value", -receiverPower);
-		System.out.println("vortexPower " + vortexPower);
+		//System.out.println("vortexPower " + vortexPower);
 		
 		
 		
 		
+		//System.out.println("Flywheel speed " + RobotMap.flywheel.getEncVelocity());
 		
-		
+		// (encvelocity / 4096) * 600 = rpm
+		// Max speed is approximately 4880 RPM
+		System.out.println("Flywheel velocity in RPM: " + (RobotMap.flywheel.getEncVelocity() * 600) / 4096);
 		
 		
 		
