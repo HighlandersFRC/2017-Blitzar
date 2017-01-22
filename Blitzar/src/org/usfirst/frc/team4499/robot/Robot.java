@@ -115,20 +115,36 @@ public class Robot extends IterativeRobot {
 		receiverPower = 0;
 		vortexPower = 0;
 		
+		RobotMap.flywheel.setP(0.05); // 0.05
+		RobotMap.flywheel.setI(0.0001); //0.0005
+		RobotMap.flywheel.setD(5); // 5
 		
+		// Max RPM is 4,800, max change in native units per 100ms is 13,140
+		// 1023 / 13,140 = 0.078
+		RobotMap.flywheel.setF(0.078);
 		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
 		RobotMap.leftMotorOne.setInverted(true);
 		RobotMap.leftMotorTwo.setInverted(true);
 		
+		RobotMap.flywheel.configNominalOutputVoltage(+0f, -0f);
+		RobotMap.flywheel.configPeakOutputVoltage(+0f, -12f);
 		RobotMap.flywheel.set(0);
 		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.flywheel.reverseOutput(false);
+		RobotMap.flywheel.reverseSensor(true);
+		RobotMap.flywheel.setInverted(false);
+		
+		System.out.println(RobotMap.flywheel.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Absolute));
 		
 		
 		// Set flywheel RPM
 		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
-		RobotMap.flywheel.set((500 * 4096) / 600);
+		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		//System.out.println("Setting flywheel to " + (1500 * 4096) / 600);
+		RobotMap.flywheel.set(-3500);
+		//RobotMap.flywheel.set(-0.5);
 		
 		
 		
@@ -166,7 +182,8 @@ public class Robot extends IterativeRobot {
 		
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
-			flywheel.controlFlywheelVelocity();
+			//flywheel.controlFlywheelVelocity();
+			//flywheel.controlFlywheelPercentVBus();
 		}
 		
 		// Control receiver
@@ -212,10 +229,16 @@ public class Robot extends IterativeRobot {
 		
 		// (encvelocity / 4096) * 600 = rpm
 		// Max speed is approximately 4880 RPM
-		System.out.println("Flywheel velocity in RPM: " + (RobotMap.flywheel.getEncVelocity() * 600) / 4096);
+		//System.out.println("Encoder speed in RPM: " + (RobotMap.flywheel.getEncVelocity() * 600) / 4096);
+		//System.out.println("Flywheel target velocity: " + (RobotMap.flywheel.getSetpoint() * 600) / 4096);
+		System.out.println("Flywheel speed in RPM " + RobotMap.flywheel.getSpeed()); // RPM
+		System.out.println("Target speed in RPM " + flyWheelPower);
+		System.out.println("PID error in RPM: " + (RobotMap.flywheel.getClosedLoopError() * 600) / 4096);
+		//System.out.println("PID error: " + RobotMap.flywheel.getClosedLoopError());
+		//System.out.println(RobotMap.flywheel.GetIaccum());
+		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
 		
-		
-		
+		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
 		Scheduler.getInstance().run();
 	}

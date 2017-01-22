@@ -31,6 +31,8 @@ public class ControlFlywheel extends Command {
     protected void initialize() {
     	flyWheelPower = Robot.flyWheelPower;
     	RobotMap.flywheel.setAllowableClosedLoopErr(0);
+    	RobotMap.flywheel.clearIAccum();
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -60,6 +62,8 @@ public class ControlFlywheel extends Command {
 				flyWheelPower = 0;
 				System.out.println("Setting flywheel power to 0 because it was greater than 0");
 			}
+			
+			RobotMap.flywheel.set(flyWheelPower);
     	}
 		
     	
@@ -69,35 +73,45 @@ public class ControlFlywheel extends Command {
    	    	// Increase/Decrease flywheel power
    	    	if (OI.flyWheelSpeedIncrease.get()) {
    	    		// Increase speed
-   	    		System.out.println("Increasing flywheel speed");
+   	    		//System.out.println("Increasing flywheel speed");
    	    		flyWheelPower = flyWheelPower - 10; // Negative is the correct direction, speed increase -> negative
    	    	}
    	    	if (OI.flyWheelSpeedDecrease.get()) {
    	    		// Decrease speed
-   	    		System.out.println("Decreasing flywheel speed");
+   	    		//System.out.println("Decreasing flywheel speed");
    				flyWheelPower = flyWheelPower + 10; // Negative is the correct direction, speed decrease -> positive
    			}
    	    	
    	    	// Keep motor within 0 throttle and full speed in the correct direction
-   			if (flyWheelPower < -2000) {
-   				flyWheelPower = -2000;
+   			if (flyWheelPower < -5000) {
+   				flyWheelPower = -5000;
    				System.out.println("Setting flywheel speed to -2000 because it was faster than -2000");
    			}
    			if (flyWheelPower > 0) {
    				flyWheelPower = 0;
    				System.out.println("Setting flywheel speed to 0 because it was above 0");
    			}
+   			
+   			
+   			
+   			// flyWheelPower is currently in RPM
+   	    	// Convert flyWheelPower so that the talon will run at the desired RPM
+   	    	//System.out.println("Flywheel power was " + flyWheelPower + " in RPM");
+   	    //flyWheelPower = ((flyWheelPower * 4096) / 600);
+   	    	// Now ready to be set to Talon'
+   	    	//System.out.println("Now it is " + flyWheelPower + " in encoder velocity");
+   			
+   			RobotMap.flywheel.set(flyWheelPower);
+   			
+   			// Get flywheel power back to RPM
+   			//System.out.println("Flywheel power was " + flyWheelPower + " in velocity");
+   		//flyWheelPower = ((flyWheelPower / 4096) * 600);
+   			//System.out.println("Now it is " + flyWheelPower + " in RPM");
        	}
-    	System.out.println(flyWheelPower);
+    	//System.out.println("Target RPM: " + flyWheelPower);
     	//System.out.println("Flywheel power " + flyWheelPower);
     	
-    	// flyWheelPower is currently in RPM
-    	// Convert flyWheelPower so that the talon will run at the desired RPM
-    	System.out.println("Flywheel power was " + flyWheelPower + " in RPM");
-    	flyWheelPower = ((flyWheelPower * 4096) / 600); // Now ready to be set to Talon'
-    	System.out.println("Now it is " + flyWheelPower + " in encoder velocity");
     	
-		RobotMap.flywheel.set(flyWheelPower);
 		
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
 		SmartDashboard.putNumber("Flywheel power", -flyWheelPower);
@@ -105,10 +119,7 @@ public class ControlFlywheel extends Command {
 		//System.out.println("flyWheelPower " + flyWheelPower);
 		//System.out.println("Flywheel speed " + RobotMap.flywheel.getEncVelocity());
 		//Robot.flyWheelPower = flyWheelPower;
-		// Get flywheel power back to RPM
-		System.out.println("Flywheel power was " + flyWheelPower + " in velocity");
-		flyWheelPower = ((flyWheelPower / 4096) * 600);
-		System.out.println("Now it is " + flyWheelPower + " in RPM");
+		
 		
 		Robot.flyWheelPower = flyWheelPower;
     }

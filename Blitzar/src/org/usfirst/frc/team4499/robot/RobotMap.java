@@ -2,7 +2,7 @@ package org.usfirst.frc.team4499.robot;
 import com.ctre.CANTalon;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
- * to a variable name. This provides flexibility changing wiring, makes checking
+ * to a variable name. This provides flexibility changing wiring, makes checki--ng
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
  */
