@@ -25,6 +25,12 @@ public class Flywheel extends Subsystem {
 		controlFlywheel.start();
 	}
 	
+	public void controlFlywheelVelocityMP(double desiredVelocity) {
+		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		OneDimensionalVelocityMP flywheelMotionProfile = new OneDimensionalVelocityMP(desiredVelocity, RobotMap.flywheel, Robot.flywheel);
+		flywheelMotionProfile.start();
+	}
+	
 	public void controlFlywheelVelocity() {
 		//RobotMap.flywheel.setP(0.02);
 		//RobotMap.flywheel.setD(0.5);

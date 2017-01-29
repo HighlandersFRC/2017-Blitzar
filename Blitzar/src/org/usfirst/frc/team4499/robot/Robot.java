@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team4499.robot.commands.ExampleCommand;
+import org.usfirst.frc.team4499.robot.commands.*;
+import org.usfirst.frc.team4499.robot.commands.auto.*;
 import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 
 import com.ctre.CANTalon;
@@ -36,6 +37,10 @@ public class Robot extends IterativeRobot {
 	
 	public static Flywheel flywheel = new Flywheel(); // Construct a flywheel subsystem object
 	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
+	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train object
+	public static Turn turn = new Turn(90, true);
+	public static ShootHigh shootHighAuto = new ShootHigh();
+	public static DriveForward driveStraight = new DriveForward(36);
 	
 	public static float flyWheelPower = 0;
 	public static float receiverPower = 0;
@@ -48,6 +53,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		
 		oi = new OI();
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
@@ -90,6 +96,10 @@ public class Robot extends IterativeRobot {
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
+		
+		//turn.start();
+		//shootHighAuto.start();
+		driveStraight.start();
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -121,34 +131,40 @@ public class Robot extends IterativeRobot {
 		
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
-		RobotMap.flywheel.setF(0.078);
+		//RobotMap.flywheel.setF(0.078);
+		RobotMap.flywheel.setF(0.01);
 		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
-		RobotMap.leftMotorOne.setInverted(true);
-		RobotMap.leftMotorTwo.setInverted(true);
+		RobotMap.leftMotorOne.setInverted(false);
+		RobotMap.leftMotorTwo.setInverted(false);
 		
 		RobotMap.flywheel.configNominalOutputVoltage(+0f, -0f);
-		RobotMap.flywheel.configPeakOutputVoltage(+0f, -12f);
+		RobotMap.flywheel.configPeakOutputVoltage(+0f, -12f); // Only drive forward
 		RobotMap.flywheel.set(0);
 		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		RobotMap.flywheel.reverseOutput(false);
 		RobotMap.flywheel.reverseSensor(true);
 		RobotMap.flywheel.setInverted(false);
+		//RobotMap.flywheel.enableBrakeMode(false);
 		
-		System.out.println(RobotMap.flywheel.isSensorPresent(CANTalon.FeedbackDevice.CtreMagEncoder_Absolute));
+		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		
+		driveTrain.controlDriveTrain();
 		
 		
-		// Set flywheel RPM
+		// Set flywheel for testing purposes
 		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
 		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-		//System.out.println("Setting flywheel to " + (1500 * 4096) / 600);
-		RobotMap.flywheel.set(-3500);
+		//RobotMap.flywheel.set(-3950);
 		//RobotMap.flywheel.set(-0.5);
 		
+		//flywheel.controlFlywheelVelocityMP(-10);
 		
 		
-		
+		//turn.start();
+		//shootHighAuto.start();
+		//driveStraight.start();
 		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
@@ -162,7 +178,7 @@ public class Robot extends IterativeRobot {
 		
 		//System.out.println("shooter power: " + flyWheelPower);
 		// Drive control
-		if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
+		/*if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
 		RobotMap.leftMotorOne.set(-oi.joystickOne.getRawAxis(1)); // Up on joystick returns lower
 		RobotMap.leftMotorTwo.set(-oi.joystickOne.getRawAxis(1)); // Negative -> Correct direction
 		} else {
@@ -176,7 +192,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			RobotMap.rightMotorOne.set(0); 
 			RobotMap.rightMotorTwo.set(0);
-		}
+		}*/
 		
 		//System.out.println(oi.joystickOne.getRawAxis(5));
 		
@@ -193,9 +209,11 @@ public class Robot extends IterativeRobot {
 		
 		// Control turret
 		if (oi.turretPanLeft.get()) {
-			RobotMap.turretMotor.set(0.2);
+			RobotMap.turretMotor.set(-0.1); // Left = negative
+			System.out.println("Negative throttle");
 		} else if (oi.turretPanRight.get()) {
-			RobotMap.turretMotor.set(-0.2);
+			RobotMap.turretMotor.set(0.1); // Right = positive
+			System.out.println("Positive throttle");
 		} else {
 			RobotMap.turretMotor.set(0);
 		}
@@ -231,15 +249,21 @@ public class Robot extends IterativeRobot {
 		// Max speed is approximately 4880 RPM
 		//System.out.println("Encoder speed in RPM: " + (RobotMap.flywheel.getEncVelocity() * 600) / 4096);
 		//System.out.println("Flywheel target velocity: " + (RobotMap.flywheel.getSetpoint() * 600) / 4096);
-		System.out.println("Flywheel speed in RPM " + RobotMap.flywheel.getSpeed()); // RPM
-		System.out.println("Target speed in RPM " + flyWheelPower);
-		System.out.println("PID error in RPM: " + (RobotMap.flywheel.getClosedLoopError() * 600) / 4096);
+		
+		//System.out.println("Flywheel speed in RPM " + RobotMap.flywheel.getSpeed()); // RPM
+		//System.out.println("Target speed in RPM " + flyWheelPower);
+		//System.out.println("PID error in RPM: " + (RobotMap.flywheel.getClosedLoopError() * 600) / 4096);
+		
 		//System.out.println("PID error: " + RobotMap.flywheel.getClosedLoopError());
 		//System.out.println(RobotMap.flywheel.GetIaccum());
 		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
 		
+		//System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
+		
 		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
+		System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
+		System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());
 		Scheduler.getInstance().run();
 	}
 

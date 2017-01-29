@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import org.usfirst.frc.team4499.robot.RobotMap;
 import org.usfirst.frc.team4499.robot.RobotStats;
 
@@ -23,30 +26,47 @@ public class OneDimensionalVelocityMP extends Command {
 	double previousTime;
 	double trajPointDurationMS;
 	double numTrajPoints;
+	double maxVelocity;
+	float maxAcceleration;
 	boolean biggerThanMPB;
+	Queue <CANTalon.TrajectoryPoint> trajPointQueue;
 	CANTalon.MotionProfileStatus talonStatus;
 	CANTalon.SetValueMotionProfile talonEnabledValue;
 	CANTalon.SetValueMotionProfile talonDisabledValue;
-	CANTalon.MotionProfileStatus MPStatus;
+	CANTalon.MotionProfileStatus MPStatus = new CANTalon.MotionProfileStatus();
 	
+	
+	// Periodic Runnable
 	class PeriodicRunnable implements java.lang.Runnable {
-	    public void run() {  
+	    public void run() {
+	    	
+	    	MPTalon.getMotionProfileStatus(MPStatus);
+	    	if (MPStatus.btmBufferCnt < 120 && MPStatus.topBufferCnt > 0) {
+	    	//System.out.println("Processing MPB");
 	    	MPTalon.processMotionProfileBuffer();
+	    	}
+	    	if (MPStatus.topBufferCnt < 2000 && !trajPointQueue.isEmpty()){ 
+	    	MPTalon.pushMotionProfileTrajectory(trajPointQueue.remove());
+	    	}
+	    	
 	    	// System.out.println("Motion profile buffer size " + MPStatus.btmBufferCnt + ", " + MPStatus.topBufferCnt + ", " + MPStatus.topBufferRem);
 	    }
 	}
 	
 	Notifier _notifier = new Notifier(new PeriodicRunnable());
 	
-    public OneDimensionalVelocityMP(double finalVelocity, CANTalon sensorTalon, Subsystem talonSubsystem, double numberOfTrajectoryPoints, double trajectoryPointDurationMS) {
+    public OneDimensionalVelocityMP(double finalVelocity, CANTalon sensorTalon, Subsystem talonSubsystem) {
     	requires(talonSubsystem);
     	
+    	
+    	maxVelocity = -60;
     	MPTalon = sensorTalon;
     	 // Store the initial velocity to construct the trajectory points
     	
     	goalVelocity = finalVelocity;
-    	trajPointDurationMS = trajectoryPointDurationMS;
-    	numTrajPoints = numberOfTrajectoryPoints;
+    	if (goalVelocity > maxVelocity) {
+    		goalVelocity = maxVelocity;
+    	}
     	talonEnabledValue = CANTalon.SetValueMotionProfile.Enable;
     	talonDisabledValue = CANTalon.SetValueMotionProfile.Disable;
     }
@@ -54,24 +74,26 @@ public class OneDimensionalVelocityMP extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	
+    	
+    	MPTalon.clearMotionProfileTrajectories();
+    	
+    	maxAcceleration = -60;
+    	trajPointQueue = new ArrayDeque <CANTalon.TrajectoryPoint>();
     	MPTalon.set(talonDisabledValue.value);
     	initialVelocity = MPTalon.getEncVelocity();
     	MPStatus = new CANTalon.MotionProfileStatus();
     	MPTalon.changeControlMode(TalonControlMode.MotionProfile);
     	MPTalon.clearMotionProfileTrajectories();
-    	previousVelocity = MPTalon.getEncVelocity();
-    	
+    	initialVelocity = MPTalon.getSpeed();
     	
     	System.out.println("Initializing MP");
     	
     	startTime = Timer.getFPGATimestamp();
-    	
-    	
     	    	
-    	MPTalon.setF(0.2);
-    	MPTalon.setP(1);
-    	MPTalon.setI(0.01);
-    	MPTalon.setD(10);
+    	//MPTalon.setF(0.2);
+    	//MPTalon.setP(1);
+    	//MPTalon.setI(0.01);
+    	//MPTalon.setD(10);
     	// Calculate the number of points required for the MP
     	//System.out.println("goalVelocity " + goalVelocity);
     	//System.out.println("initialVelocity " + initialVelocity);
@@ -79,75 +101,59 @@ public class OneDimensionalVelocityMP extends Command {
     	//System.out.println("Calculated... " + (goalVelocity - initialVelocity) / (trajPointDurationMS / 1000 ));
     	//numTrajPoints = Math.abs((int) (Math.round( (goalVelocity - initialVelocity) / (trajPointDurationMS / 1000 ) )));
     	
-    	System.out.println("numTrajPoints: " + numTrajPoints);
+//    	System.out.println("numTrajPoints: " + numTrajPoints);
     	
     	if (MPStatus.hasUnderrun) {
     		System.out.println("Under-run");
     		MPTalon.clearMotionProfileHasUnderrun();
     	}
     	
-    	// Talon SRX can store 128 trajectory points
-    	if (numTrajPoints > 127) biggerThanMPB = true;
-    	
     	//if (talonStatus.hasUnderrun) {
     		//System.out.println("Talon has underrun.");
     		//MPTalon.clearMotionProfileHasUnderrun();
     	//}
 
-    	// Generate trajectory points and feed them to the Talon SRX's MPB
+    	System.out.println("finalVelocity: " + goalVelocity);
+    	System.out.println("maxAcceleration: " + maxAcceleration);
+    	System.out.println("initialVelocity: " + initialVelocity);
     	
-    //	if (!biggerThanMPB) {
-    	for (int i = 0; i < numTrajPoints; i++) {
-    		
-    		// Calculate the current trajectory point's velocity, and store it to calculate the next point's velocity
-    		//System.out.println(trajPointDurationMS);
-    		//System.out.println(RobotStats.maxLifterAccelerationLoad);
-    		//System.out.println(trajPointDurationMS / 1000);
-    		//System.out.println((trajPointDurationMS / 1000) * RobotStats.maxLifterAccelerationLoad);
-    		//System.out.println("previousVelocity " + previousVelocity);
+    	for (double v = initialVelocity; v > goalVelocity; v += (maxAcceleration * 0.01) ) {
     		point.velocityOnly = true;
-    		point.velocity = previousVelocity - ((trajPointDurationMS / 1000) * RobotStats.maxFlywheelAcceleration);
-    		previousVelocity = previousVelocity - ((trajPointDurationMS / 1000) * RobotStats.maxFlywheelAcceleration);
+    		point.velocity = v;
     		point.profileSlotSelect = 0;
-    		//point.velocity = previousVelocity;
-    		//point.velocity = 3;
-    		//previousVelocity = point.velocity;
-    		
-    		//point.timeDurMs = (int) trajPointDurationMS;
     		point.timeDurMs = 10;
-    		point.profileSlotSelect = 0;
     		
+    		System.out.println("v " + v);
     		
     		// If this is the first point, set the zeroPos value to true
     		point.zeroPos = false;
-    		if (i == 0) {
+    		if (v == initialVelocity) {
     			point.zeroPos = true;
     			point.velocity = initialVelocity;
     		}
     		// If this is the last point, set the isLastPoint value to true
     		point.isLastPoint = false;
-    		if ((i+1) == numTrajPoints) {
+    		if (v + maxAcceleration * 0.01 > goalVelocity) {
     			point.isLastPoint = true;
     		}
-    		// Push the trajectory point to the Talon SRX's MPB
-    		MPTalon.pushMotionProfileTrajectory(point);
     		
-    		System.out.println("Trajectory point number " + i + " with a velocity of " + point.velocity + ", " + point.isLastPoint + ", " + point.zeroPos);
+    		//System.out.println("Calculated velocity: " + point.velocity);
+    		// Push the trajectory point to the queue
+    		// The notifier then pushes from the queue to the Talon SRX's MPB
+    		//System.out.println(trajPointQueue.offer(point));
+    		trajPointQueue.offer(point);
+    		//System.out.println("Added point with velocity: " + point.velocity);
     		
 		}
+    	MPTalon.getMotionProfileStatus(MPStatus); // Grab status for the notifier
+    	
+    	for (int i = 0; i < trajPointQueue.size(); i++) {
+    		System.out.println("Item " + i + " with velocity of " + trajPointQueue.remove().velocity);
+    	}
     	
     	MPTalon.changeMotionControlFramePeriod(5);
     	_notifier.startPeriodic(0.005);
-/*    	
-  		} else {
-        	for (int i = 0; i < 128; i++) {
-        		
-        	}
-        }
-*/
     	
-    	
-    	//MPTalon.set(1);
     	
     }
 
@@ -156,18 +162,18 @@ public class OneDimensionalVelocityMP extends Command {
     	
     	MPTalon.getMotionProfileStatus(MPStatus);
     	
-    	//System.out.println("Executing MP, talon trying to output " + MPTalon.getOutputCurrent());
-    	// System.out.println("Active point velocity " + MPStatus.activePoint.velocity + ", " + MPStatus.activePointValid);
-    	// System.out.println("Active point is first " + MPStatus.activePoint.zeroPos);
-    	// System.out.println("Active point is last " + MPStatus.activePoint.isLastPoint);
-    	// System.out.println("Number of points in MPB " + MPStatus.btmBufferCnt);
+    	// System.out.println("Executing MP, talon trying to output " + MPTalon.getOutputCurrent());
+    	//System.out.println("Active point velocity " + MPStatus.activePoint.velocity + ", " + MPStatus.activePointValid);
+    	//System.out.println("Active point is first " + MPStatus.activePoint.zeroPos);
+    	//System.out.println("Active point is last " + MPStatus.activePoint.isLastPoint);
+    	//System.out.println("Number of points in MPB " + MPStatus.btmBufferCnt);
+    	//System.out.println("Number of points in API buffer " + MPStatus.topBufferCnt);
     	
     	//MPTalon.set(talonEnabledValue.value);
-    	// MPTalon.processMotionProfileBuffer();
 
     	if (MPStatus.btmBufferCnt > 5) {
     		MPTalon.set(CANTalon.SetValueMotionProfile.Enable.value);	
-    		System.out.println("Enabled MP");
+    		//System.out.println("Enabled MP");
     	}
     	
     	System.out.flush();
@@ -192,3 +198,4 @@ public class OneDimensionalVelocityMP extends Command {
     	_notifier.stop();
     }
 }
+	

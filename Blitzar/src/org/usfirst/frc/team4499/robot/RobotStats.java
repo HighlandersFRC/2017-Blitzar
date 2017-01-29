@@ -6,8 +6,9 @@ public class RobotStats {
 	// These numbers are permanent and do not change while the
 	// robot is being operated.
 	
-	public static float maxFlywheelVelocity = 100; // Ticks per second
-	public static float maxFlywheelAcceleration = 10; // Ticks per second^2
+	public static final float maxFlywheelVelocity = 4800; // RPM
+	public static final float maxFlywheelAcceleration = 10; // Ticks per second^2
+	public static double driveDiameter = 4;
 	
-	
+	public static double referenceVoltage = 12;
 }
