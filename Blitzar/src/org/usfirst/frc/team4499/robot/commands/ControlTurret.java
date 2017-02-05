@@ -1,34 +1,45 @@
 package org.usfirst.frc.team4499.robot.commands;
 
+import org.usfirst.frc.team4499.robot.Robot;
 import org.usfirst.frc.team4499.robot.RobotMap;
-
-import com.ctre.CANTalon.TalonControlMode;
+import org.usfirst.frc.team4499.robot.OI;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class setVortexPower extends Command {
+public class ControlTurret extends Command {
 
-	float setPower;
+	private float setPower;
 	
-    public setVortexPower(float vortexPower) {
+    public ControlTurret() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	setPower = vortexPower;
+    	requires(Robot.turret);
+    	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	RobotMap.vortexMotor.changeControlMode(TalonControlMode.PercentVbus);
-    
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.vortexMotor.set(setPower);
-    
+    	if (OI.turretPanLeft.get()) {
+    		setPower = (float) -0.1; // Left = negative
+		} else if (OI.turretPanRight.get()) {
+			setPower = (float) +0.1; // Right = positive 
+		} else {
+			setPower = 0;
+		}
+    	
+    	if (OI.turretPanLeft.get() && OI.turretPanRight.get()) {
+    		setPower = 0;
+    	}
+    	
+    	RobotMap.turretMotor.set(setPower);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -38,12 +49,10 @@ public class setVortexPower extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	System.out.println("setVortexPower interrupted");
     }
 }

@@ -80,6 +80,8 @@ public class PID {
 	public void setContinuous(boolean value){
 		continuous = value;
 	}
+	
+	
 	public double getSetPoint(){
 	return setPoint;	
 	}

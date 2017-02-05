@@ -59,14 +59,15 @@ public class OneDimensionalVelocityMP extends Command {
     	requires(talonSubsystem);
     	
     	
-    	maxVelocity = -60;
+    	maxVelocity = -60; // Should be RPM
     	MPTalon = sensorTalon;
-    	 // Store the initial velocity to construct the trajectory points
     	
+    	 // Store the initial velocity to construct the trajectory points
     	goalVelocity = finalVelocity;
     	if (goalVelocity > maxVelocity) {
     		goalVelocity = maxVelocity;
     	}
+    	
     	talonEnabledValue = CANTalon.SetValueMotionProfile.Enable;
     	talonDisabledValue = CANTalon.SetValueMotionProfile.Disable;
     }
@@ -74,12 +75,15 @@ public class OneDimensionalVelocityMP extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	
-    	
+    	// Clear any existing points
     	MPTalon.clearMotionProfileTrajectories();
     	
     	maxAcceleration = -60;
     	trajPointQueue = new ArrayDeque <CANTalon.TrajectoryPoint>();
+    	
+    	// Disable MPTalon
     	MPTalon.set(talonDisabledValue.value);
+    	// Start at the current velocity
     	initialVelocity = MPTalon.getEncVelocity();
     	MPStatus = new CANTalon.MotionProfileStatus();
     	MPTalon.changeControlMode(TalonControlMode.MotionProfile);
@@ -123,7 +127,7 @@ public class OneDimensionalVelocityMP extends Command {
     		point.profileSlotSelect = 0;
     		point.timeDurMs = 10;
     		
-    		System.out.println("v " + v);
+    		System.out.println("v: " + v);
     		
     		// If this is the first point, set the zeroPos value to true
     		point.zeroPos = false;
@@ -133,8 +137,9 @@ public class OneDimensionalVelocityMP extends Command {
     		}
     		// If this is the last point, set the isLastPoint value to true
     		point.isLastPoint = false;
-    		if (v + maxAcceleration * 0.01 > goalVelocity) {
+    		if (v + (maxAcceleration * 0.01) > goalVelocity) {
     			point.isLastPoint = true;
+    			System.out.println("Last point true for velocity: " + v);
     		}
     		
     		//System.out.println("Calculated velocity: " + point.velocity);
@@ -176,7 +181,7 @@ public class OneDimensionalVelocityMP extends Command {
     		//System.out.println("Enabled MP");
     	}
     	
-    	System.out.flush();
+    	//System.out.flush();
     	
     }
 

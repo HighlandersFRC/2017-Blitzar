@@ -1,10 +1,13 @@
 package org.usfirst.frc.team4499.robot.tools;
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.json.*;
 
 public class Tegra implements Runnable{
 	public static int x = -1;
@@ -15,6 +18,7 @@ public class Tegra implements Runnable{
     ServerSocket serverSocket;
     boolean run = true;
     Thread tegra;
+    int counter;
 	public Tegra() throws IOException{
 	        port = 5801;
 	        
@@ -24,7 +28,7 @@ public class Tegra implements Runnable{
 
 	    public static int[] parsePoint(String line) {
 	    	//System.out.println("Checking Line" + line);
-	        int point[] = {0,0};
+	        int point[] = {0, 0};
 	        int position = 0;
 	        if(line.length() > 1){
 	        	if(line.charAt(0) == '#'){
@@ -75,13 +79,24 @@ public class Tegra implements Runnable{
 			                	System.out.println("Losts comms with Tegra");
 			                	break;
 			                }
-			                int point[] = parsePoint(fromClient);
+			               // int point[] = parsePoint(fromClient);
+			                //System.out.println(fromClient);
+			                JSONObject obj = new JSONObject(fromClient);
+			                x = obj.getInt("xCenter");
+			                y = obj.getInt("yCenter");
+			                
+			                if (counter > 30) {
+			                //System.out.println("x: " + x + "      y: " + y);
+			                counter = 0;
+			                }
+			                counter++;
+			                //x = obj.getJSONObject("xCenter");
 			                // Scanner scanner = new Scanner(fromClient);
 			                //int x = scanner.nextInt();
 			                // int y = scanner.nextInt();
 			               // System.out.println("received: "  +"(" +(point[0]) +","+ (point[1]) + ")"); 
-			                x = point[0];
-			                y = point[1];
+			              //  x = point[0];
+			              //  y = point[1];
 			            }
 
 			        }

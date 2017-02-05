@@ -40,13 +40,13 @@ public class ControlReceiver extends Command {
     	// Keep motor within 0 throttle and full speed in the correct direction
 		if (receiverPower < -1) {
 			receiverPower = -1;
-			System.out.println("Setting flywheel power to -1 because it was less than -1");
+			System.out.println("Setting receiver power to -1 because it was less than -1");
 		}
 		if (receiverPower > 0) {
 			receiverPower = 0;
-			System.out.println("Setting flywheel power to 0 because it was greater than 0");
+			System.out.println("Setting receiver power to 0 because it was greater than 0");
 		}
-		RobotMap.receiverLeft.set(receiverPower);
+	//	RobotMap.receiverLeft.set(receiverPower);
 		RobotMap.receiverRight.set(receiverPower);
 		
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
@@ -64,10 +64,12 @@ public class ControlReceiver extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+		
     }
 }

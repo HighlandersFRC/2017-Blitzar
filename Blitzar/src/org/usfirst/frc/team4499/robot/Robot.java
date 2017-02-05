@@ -15,8 +15,12 @@ import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 
+import java.io.IOException;
+
 import org.usfirst.frc.team4499.robot.OI;
 import org.usfirst.frc.team4499.robot.subsystems.*;
+
+import org.usfirst.frc.team4499.robot.tools.Tegra;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,22 +33,27 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
-
+	Tegra tegra;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 	
 	// Variable Declarations
 	
+	
+	
 	public static Flywheel flywheel = new Flywheel(); // Construct a flywheel subsystem object
 	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
-	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train object
+	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train subsystem object
+	public static Turret turret = new Turret(); // Construct a new turret subsystem object
 	public static Turn turn = new Turn(90, true);
 	public static ShootHigh shootHighAuto = new ShootHigh();
 	public static DriveForward driveStraight = new DriveForward(36);
+	public static TrackTargetPID trackTarget = new TrackTargetPID();
 	
 	public static float flyWheelPower = 0;
 	public static float receiverPower = 0;
 	public static float vortexPower = 0;
+	public static float lifterPower = 0;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -58,6 +67,16 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+		
+		
+		
+		try {
+			tegra = new Tegra();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	/**
@@ -72,6 +91,10 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		
+		
+		
+		
 		Scheduler.getInstance().run();
 	}
 
@@ -99,7 +122,7 @@ public class Robot extends IterativeRobot {
 		
 		//turn.start();
 		//shootHighAuto.start();
-		driveStraight.start();
+		//driveStraight.start();
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -124,6 +147,7 @@ public class Robot extends IterativeRobot {
 		flyWheelPower = 0;
 		receiverPower = 0;
 		vortexPower = 0;
+		lifterPower = 0;
 		
 		RobotMap.flywheel.setP(0.05); // 0.05
 		RobotMap.flywheel.setI(0.0001); //0.0005
@@ -148,6 +172,12 @@ public class Robot extends IterativeRobot {
 		RobotMap.flywheel.setInverted(false);
 		//RobotMap.flywheel.enableBrakeMode(false);
 		
+		RobotMap.receiverLeft.set(0);
+		RobotMap.receiverRight.set(0);
+		
+		RobotMap.climbMotorOne.set(0);
+		RobotMap.climbMotorTwo.set(0);
+		
 		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		
 		driveTrain.controlDriveTrain();
@@ -165,6 +195,7 @@ public class Robot extends IterativeRobot {
 		//turn.start();
 		//shootHighAuto.start();
 		//driveStraight.start();
+		trackTarget.start();
 		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
@@ -199,7 +230,7 @@ public class Robot extends IterativeRobot {
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			//flywheel.controlFlywheelVelocity();
-			//flywheel.controlFlywheelPercentVBus();
+			flywheel.controlFlywheelPercentVBus();
 		}
 		
 		// Control receiver
@@ -208,14 +239,8 @@ public class Robot extends IterativeRobot {
 		}
 		
 		// Control turret
-		if (oi.turretPanLeft.get()) {
-			RobotMap.turretMotor.set(-0.1); // Left = negative
-			System.out.println("Negative throttle");
-		} else if (oi.turretPanRight.get()) {
-			RobotMap.turretMotor.set(0.1); // Right = positive
-			System.out.println("Positive throttle");
-		} else {
-			RobotMap.turretMotor.set(0);
+		if (oi.turretPanLeft.get() || oi.turretPanRight.get()) {
+			turret.controlTurretPower();
 		}
 		
 		// Control vortex
@@ -232,8 +257,29 @@ public class Robot extends IterativeRobot {
 			vortexPower = 0;
 		}
 		
-		RobotMap.vortexMotorOne.set(-vortexPower);
-		RobotMap.vortexMotorTwo.set(-vortexPower);
+		RobotMap.vortexMotor.set(-vortexPower);
+		
+		// Control lifter
+		/*if (oi.joystickOne.getPOV() == 90) {
+			lifterPower += 0.02;
+		}
+		if (oi.joystickOne.getPOV() == 270 || oi.joystickOne.getPOV() == 315 || oi.joystickOne.getPOV() == 225){
+			lifterPower -= 0.05;
+		}
+		if (lifterPower > 1) {
+			lifterPower = 1;
+		}
+		if (lifterPower < 0) {
+			lifterPower = 0;
+		}*/
+		
+		//System.out.println("lifterPower " + lifterPower);
+		
+		//RobotMap.climbMotorOne.set(-lifterPower);
+		//RobotMap.climbMotorTwo.set(lifterPower);
+		//RobotMap.climbMotorOne.set(-1);
+		//RobotMap.climbMotorTwo.set(1);
+	
 		
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
 		//SmartDashboard.putNumber("Receiver power", -receiverPower);
@@ -258,12 +304,12 @@ public class Robot extends IterativeRobot {
 		//System.out.println(RobotMap.flywheel.GetIaccum());
 		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
 		
-		//System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
+	//	System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
 		
-		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
+		//SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
-		System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
-		System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());
+		//System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
+		//System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());
 		Scheduler.getInstance().run();
 	}
 

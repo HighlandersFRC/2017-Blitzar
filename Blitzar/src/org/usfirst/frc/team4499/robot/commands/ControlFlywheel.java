@@ -85,7 +85,7 @@ public class ControlFlywheel extends Command {
    	    	// Keep motor within 0 throttle and full speed in the correct direction
    			if (flyWheelPower < -5000) {
    				flyWheelPower = -5000;
-   				System.out.println("Setting flywheel speed to -2000 because it was faster than -2000");
+   				System.out.println("Setting flywheel speed to -5000 because it was faster than -5000");
    			}
    			if (flyWheelPower > 0) {
    				flyWheelPower = 0;
