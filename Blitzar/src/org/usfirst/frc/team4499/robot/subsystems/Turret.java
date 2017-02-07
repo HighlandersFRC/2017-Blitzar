@@ -10,14 +10,18 @@ public class Turret extends Subsystem {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
-
+	
+	
+	
 	public void controlTurretPower() {
 		ControlTurret controlTurret = new ControlTurret();
 		controlTurret.start();
 	}
 	
-	public void controlTurretPositionRelative() {
-		
+	public void controlTurretPositionRelative(double angle) {
+		System.out.println("Started controlTurretPositionRelative");
+		TurretMP turretMP = new TurretMP(angle);
+		turretMP.start();
 	}
 	
 	public void controlTurretAbsolute() {

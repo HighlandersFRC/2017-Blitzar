@@ -41,7 +41,6 @@ public class ControlDriveTrain extends Command {
     	if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
     		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
     		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
-    		System.out.println("Left motor");
     	} else {
     		leftMotorOne.set(0); 
     		leftMotorTwo.set(0);

@@ -2,6 +2,7 @@
 package org.usfirst.frc.team4499.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -54,6 +55,10 @@ public class Robot extends IterativeRobot {
 	public static float receiverPower = 0;
 	public static float vortexPower = 0;
 	public static float lifterPower = 0;
+	public static boolean gotToPosition;
+	double startTime;
+	double previousVelocity;
+	double previousTime;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -143,6 +148,9 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		gotToPosition = true;
+		startTime = Timer.getFPGATimestamp();
+		previousVelocity = RobotMap.flywheel.getEncVelocity();
 		
 		flyWheelPower = 0;
 		receiverPower = 0;
@@ -178,7 +186,15 @@ public class Robot extends IterativeRobot {
 		RobotMap.climbMotorOne.set(0);
 		RobotMap.climbMotorTwo.set(0);
 		
-		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.turretMotor.setEncPosition(0);
+		RobotMap.turretMotor.setForwardSoftLimit(2.9);
+		RobotMap.turretMotor.setReverseSoftLimit(-1.4);
+		RobotMap.turretMotor.enableForwardSoftLimit(true);
+		RobotMap.turretMotor.enableReverseSoftLimit(true);
+		RobotMap.turretMotor.set(0);
+		RobotMap.turretMotor.setPID(1, .002, 1.5);
+		RobotMap.turretMotor.setF(0.25);
 		
 		driveTrain.controlDriveTrain();
 		
@@ -195,7 +211,11 @@ public class Robot extends IterativeRobot {
 		//turn.start();
 		//shootHighAuto.start();
 		//driveStraight.start();
-		trackTarget.start();
+		
+	//	trackTarget.start();
+		
+		//turret.controlTurretPositionRelative(0);
+		//turret.controlTurretPositionRelative(0.5);
 		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
@@ -259,6 +279,15 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.vortexMotor.set(-vortexPower);
 		
+		
+		if (Tegra.x != -1) {
+			if (gotToPosition) {
+				gotToPosition = false;
+			System.out.println("Controlled Turret for theta " + Tegra.theta);
+		turret.controlTurretPositionRelative(Tegra.theta);
+			}
+		}
+		//turret.controlTurretPositionRelative(0.5);
 		// Control lifter
 		/*if (oi.joystickOne.getPOV() == 90) {
 			lifterPower += 0.02;
@@ -286,16 +315,6 @@ public class Robot extends IterativeRobot {
 		//SmartDashboard.putNumber( "Receiver power value", -receiverPower);
 		//System.out.println("vortexPower " + vortexPower);
 		
-		
-		
-		
-		//System.out.println("Flywheel speed " + RobotMap.flywheel.getEncVelocity());
-		
-		// (encvelocity / 4096) * 600 = rpm
-		// Max speed is approximately 4880 RPM
-		//System.out.println("Encoder speed in RPM: " + (RobotMap.flywheel.getEncVelocity() * 600) / 4096);
-		//System.out.println("Flywheel target velocity: " + (RobotMap.flywheel.getSetpoint() * 600) / 4096);
-		
 		//System.out.println("Flywheel speed in RPM " + RobotMap.flywheel.getSpeed()); // RPM
 		//System.out.println("Target speed in RPM " + flyWheelPower);
 		//System.out.println("PID error in RPM: " + (RobotMap.flywheel.getClosedLoopError() * 600) / 4096);
@@ -304,9 +323,22 @@ public class Robot extends IterativeRobot {
 		//System.out.println(RobotMap.flywheel.GetIaccum());
 		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
 		
-	//	System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
+		System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
+		//System.out.println("Turret velocity " + RobotMap.turretMotor.getSpeed());
 		
-		//SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
+		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
+		
+		
+		/*if (Math.abs(RobotMap.turretMotor.getSpeed()) > 55) {
+    		System.out.println("Ended timer");
+    		System.out.println("Timer: " + Timer.getFPGATimestamp());
+    		System.out.println("Current acceleration: " + ((RobotMap.turretMotor.getSpeed() - previousVelocity) / (Timer.getFPGATimestamp() - previousTime)) );
+    		System.out.println(startTime - Timer.getFPGATimestamp());
+    	}
+		
+		previousVelocity = RobotMap.turretMotor.getSpeed();
+    	previousTime = Timer.getFPGATimestamp();*/
+		
 		
 		//System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
 		//System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());

@@ -12,6 +12,8 @@ import org.json.*;
 public class Tegra implements Runnable{
 	public static int x = -1;
 	public static int y = -1;
+	public static double distance;
+	public static double theta;
 	int port;
 	String fromClient = "";
     String toClient = "";
@@ -33,7 +35,7 @@ public class Tegra implements Runnable{
 	        if(line.length() > 1){
 	        	if(line.charAt(0) == '#'){
 	        		System.out.println(line);
-	        		point[0] = -2;
+	        		point[0] =0 -2;
 	        		point[1] = -2;
 	        		return point;
 	        	}
@@ -74,6 +76,8 @@ public class Tegra implements Runnable{
 			            while (fromClient != null && run) {
 			                fromClient = in.readLine();
 			                if(fromClient == null){
+			                	distance = -1;
+			                	theta = 4;
 			                	x = -1;
 			                	y = -1;
 			                	System.out.println("Losts comms with Tegra");
@@ -84,9 +88,12 @@ public class Tegra implements Runnable{
 			                JSONObject obj = new JSONObject(fromClient);
 			                x = obj.getInt("xCenter");
 			                y = obj.getInt("yCenter");
+			                distance = obj.getDouble("distance");
+			                theta = obj.getDouble("theta");
+			                
 			                
 			                if (counter > 30) {
-			                //System.out.println("x: " + x + "      y: " + y);
+			                System.out.println("x:" + x + " y:" + y + " distance:" + distance + " theta:" + theta);
 			                counter = 0;
 			                }
 			                counter++;
