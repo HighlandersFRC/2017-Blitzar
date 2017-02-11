@@ -19,7 +19,7 @@ public class Turret extends Subsystem {
 	}
 	
 	public void controlTurretPositionRelative(double angle) {
-		System.out.println("Started controlTurretPositionRelative");
+		//System.out.println("Started controlTurretPositionRelative");
 		TurretMP turretMP = new TurretMP(angle);
 		turretMP.start();
 	}

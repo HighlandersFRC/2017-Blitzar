@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
-	private double kI = 0.001;
-	private double kP = 0.05;
-	private double kD = 0;
+	private double kI = 0.0001;
+	private double kP = 0.03;
+	private double kD = 0.2;
 	private double target = 0;
 	private int whichWay = 0;
 	Preferences prefs;
@@ -65,8 +65,8 @@ public class Turn extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		//return Math.abs(target - RobotMap.navx.getYaw()) < 2 && orientation.getResult() <.05;
-		return false;
+		return Math.abs(target - RobotMap.navx.getYaw()) < 2 && orientation.getResult() <.05;
+		//return false;
 	}
 	
 	@Override

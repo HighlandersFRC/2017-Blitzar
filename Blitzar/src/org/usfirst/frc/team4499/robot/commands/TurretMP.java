@@ -25,23 +25,25 @@ public class TurretMP extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	RobotMap.turretMotor.disable();
+    	//RobotMap.turretMotor.disable();
     	RobotMap.turretMotor.changeControlMode(TalonControlMode.MotionMagic);
     	//RobotMap.turretMotor.setPID(6, 0.001, 0);
-    	RobotMap.turretMotor.setF(0.2);
-    	RobotMap.turretMotor.setAllowableClosedLoopErr(10);
-    	RobotMap.turretMotor.setMotionMagicCruiseVelocity(55);
+    	//RobotMap.turretMotor.setF(0.2);
+    	RobotMap.turretMotor.setAllowableClosedLoopErr(0);
+    	RobotMap.turretMotor.setMotionMagicCruiseVelocity(55); //max 420
     	RobotMap.turretMotor.setMotionMagicAcceleration(50);
     	RobotMap.turretMotor.configNominalOutputVoltage(0, 0);
     	RobotMap.turretMotor.configPeakOutputVoltage(12, -12);
-    	RobotMap.turretMotor.clearMotionProfileTrajectories();
-    	RobotMap.turretMotor.enable();
-    	System.out.println("Initialized TurretMP");
+    	//RobotMap.turretMotor.clearMotionProfileTrajectories();
+    	//RobotMap.turretMotor.enable();
+    	//System.out.println("Initialized TurretMP");
+    	RobotMap.turretMotor.set(setAngle);
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.turretMotor.set(setAngle);
+    	//RobotMap.turretMotor.set(setAngle);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -51,7 +53,7 @@ public class TurretMP extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("Got to desired position.");
+    	//System.out.println("Got to desired position.");
     	Robot.gotToPosition = true;
     }
 

@@ -48,8 +48,9 @@ public class Robot extends IterativeRobot {
 	public static Turret turret = new Turret(); // Construct a new turret subsystem object
 	public static Turn turn = new Turn(90, true);
 	public static ShootHigh shootHighAuto = new ShootHigh();
-	public static DriveForward driveStraight = new DriveForward(36);
+	public static DriveForward driveStraight = new DriveForward(36); 
 	public static TrackTargetPID trackTarget = new TrackTargetPID();
+	public static NavXDriveForward gyroDriveForward = new NavXDriveForward(0.5, 2);
 	
 	public static float flyWheelPower = 0;
 	public static float receiverPower = 0;
@@ -73,7 +74,7 @@ public class Robot extends IterativeRobot {
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 		
-		
+		RobotMap.navx.zeroYaw();
 		
 		try {
 			tegra = new Tegra();
@@ -126,8 +127,9 @@ public class Robot extends IterativeRobot {
 		 */
 		
 		//turn.start();
-		//shootHighAuto.start();
+		shootHighAuto.start();
 		//driveStraight.start();
+		//gyroDriveForward.start();
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -159,7 +161,7 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.flywheel.setP(0.05); // 0.05
 		RobotMap.flywheel.setI(0.0001); //0.0005
-		RobotMap.flywheel.setD(5); // 5
+		RobotMap.flywheel.setD(0.5); // 5
 		
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
@@ -193,8 +195,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.turretMotor.enableForwardSoftLimit(true);
 		RobotMap.turretMotor.enableReverseSoftLimit(true);
 		RobotMap.turretMotor.set(0);
-		RobotMap.turretMotor.setPID(1, .002, 1.5);
-		RobotMap.turretMotor.setF(0.25);
+		RobotMap.turretMotor.setPID(0.5, 0, 0); //try 0.6P and 50 D?
+		RobotMap.turretMotor.setF(2.725); //2.725
+		RobotMap.turretMotor.setVoltageRampRate(1000);
 		
 		driveTrain.controlDriveTrain();
 		
@@ -280,14 +283,15 @@ public class Robot extends IterativeRobot {
 		RobotMap.vortexMotor.set(-vortexPower);
 		
 		
-		if (Tegra.x != -1) {
-			if (gotToPosition) {
+		/*if (Tegra.x != -1) {
+			//if (gotToPosition) {
 				gotToPosition = false;
-			System.out.println("Controlled Turret for theta " + Tegra.theta);
-		turret.controlTurretPositionRelative(Tegra.theta);
-			}
-		}
+			System.out.println("Turret at " + RobotMap.turretMotor.getPosition() + " trying to turn " + Tegra.theta + " to " + (RobotMap.turretMotor.getPosition() + Tegra.theta));
+		turret.controlTurretPositionRelative(RobotMap.turretMotor.getPosition() + Tegra.theta);
+		//	}
+		}*/
 		//turret.controlTurretPositionRelative(0.5);
+		//turret.controlTurretPositionRelative(OI.joystickOne.getRawAxis(5) * 1);
 		// Control lifter
 		/*if (oi.joystickOne.getPOV() == 90) {
 			lifterPower += 0.02;
@@ -306,8 +310,8 @@ public class Robot extends IterativeRobot {
 		
 		//RobotMap.climbMotorOne.set(-lifterPower);
 		//RobotMap.climbMotorTwo.set(lifterPower);
-		//RobotMap.climbMotorOne.set(-1);
-		//RobotMap.climbMotorTwo.set(1);
+		//RobotMap.climbMotorOne.set(0); //negative
+		//RobotMap.climbMotorTwo.set(0); //positive
 	
 		
 		// Prints twice so that one can be a progress bar, and the other can be a raw value
@@ -323,9 +327,13 @@ public class Robot extends IterativeRobot {
 		//System.out.println(RobotMap.flywheel.GetIaccum());
 		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
 		
-		System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
-		//System.out.println("Turret velocity " + RobotMap.turretMotor.getSpeed());
+		//System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
+	//	System.out.println("Turret velocity " + RobotMap.turretMotor.getSpeed());
 		
+		System.out.println(RobotMap.navx.getYaw());
+		
+		
+		SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
 		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
 		

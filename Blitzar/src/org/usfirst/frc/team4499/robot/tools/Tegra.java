@@ -93,7 +93,7 @@ public class Tegra implements Runnable{
 			                
 			                
 			                if (counter > 30) {
-			                System.out.println("x:" + x + " y:" + y + " distance:" + distance + " theta:" + theta);
+			                //System.out.println("x:" + x + " y:" + y + " distance:" + distance + " theta:" + theta);
 			                counter = 0;
 			                }
 			                counter++;

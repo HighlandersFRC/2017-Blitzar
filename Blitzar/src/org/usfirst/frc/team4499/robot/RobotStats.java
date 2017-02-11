@@ -8,7 +8,7 @@ public class RobotStats {
 	
 	public static final float maxFlywheelVelocity = 4800; // RPM
 	public static final float maxFlywheelAcceleration = 10; // Ticks per second^2
-	public static double driveDiameter = 4;
+	public static double driveDiameter = 3.98;
 	
 	public static double referenceVoltage = 12;
 }

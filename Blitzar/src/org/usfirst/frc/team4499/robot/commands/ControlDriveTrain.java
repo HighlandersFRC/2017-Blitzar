@@ -7,6 +7,7 @@ import org.usfirst.frc.team4499.robot.OI;
 import org.usfirst.frc.team4499.robot.Robot;
 
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 
 /**
  *
@@ -33,6 +34,10 @@ public class ControlDriveTrain extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	RobotMap.leftMotorOne.changeControlMode(TalonControlMode.PercentVbus);
+    	RobotMap.leftMotorTwo.changeControlMode(TalonControlMode.PercentVbus);
+    	RobotMap.rightMotorOne.changeControlMode(TalonControlMode.PercentVbus);
+    	RobotMap.rightMotorTwo.changeControlMode(TalonControlMode.PercentVbus);
     }
 
     // Called repeatedly when this Command is scheduled to run
