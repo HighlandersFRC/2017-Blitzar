@@ -45,7 +45,7 @@ public class OI {
 	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1); // A
 	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4); // Y
 	
-	// Receiver has been removed from robot
+	// Conveyor
 	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 7); // Back
 	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 8); // Start
 

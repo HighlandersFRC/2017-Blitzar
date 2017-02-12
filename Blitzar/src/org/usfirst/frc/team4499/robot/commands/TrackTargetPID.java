@@ -49,7 +49,7 @@ public class TrackTargetPID extends Command {
     	RobotMap.turretMotor.set(-orientation.getResult());
     	}
     	
-    	if (RobotMap.turretMotor.getEncPosition() > -0.8 && RobotMap.turretMotor.getEncPosition()< 3.7 ) {
+    	if (RobotMap.turretMotor.getEncPosition() > -1.4 && RobotMap.turretMotor.getEncPosition()< 2.9 ) {
     		
     	
     	

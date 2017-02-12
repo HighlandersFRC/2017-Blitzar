@@ -30,13 +30,26 @@ public class ShootHigh extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	//addParallel(new setFlywheelVelocity(-3900));
-    	//addSequential(new Wait(2));
-    	//addSequential(new setVortexPower(-1));
-    	addSequential(new DriveForward(40));
-    	addSequential(new Turn(-90, false));
-    	addSequential(new Wait(2));
-    	addSequential(new DriveForward(40));
+    	addParallel(new setFlywheelVelocity(-3400));
+    	addSequential(new Wait(1));
+    	addParallel(new setVortexPower(-1));
+    	addParallel(new setReceiverPower(-1));
+    	addSequential(new Wait(3));
+    	
+    	addParallel(new setFlywheelVelocity(0));
+    	addParallel(new setVortexPower(0));
+    	addParallel(new setReceiverPower(0));
+    	
+    	addSequential(new DriveForward(85));
+    	addSequential(new Wait(0.5));
+    	addSequential(new Turn(90, false));
+    	addSequential(new Wait(0.5));
+    	addSequential(new NavXDriveForward(0.4, 2));
+    	
+    	addParallel(new setFlywheelVelocity(-4000));
+    	addSequential(new Wait(1));
+    	addParallel(new setVortexPower(-1));
+    	addParallel(new setReceiverPower(-1));
     	
     }
 }

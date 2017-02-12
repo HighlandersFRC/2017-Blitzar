@@ -6,7 +6,9 @@ import org.usfirst.frc.team4499.robot.Robot;
 import org.usfirst.frc.team4499.robot.RobotMap;
 import org.usfirst.frc.team4499.robot.RobotStats;
 import org.usfirst.frc.team4499.robot.commands.*;
+import org.usfirst.frc.team4499.robot.tools.Tegra;
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.TalonControlMode;
 
 /**
  *
@@ -30,6 +32,13 @@ public class Flywheel extends Subsystem {
 		//                                                                                 Goal            MPTalon          Subsystem
 		OneDimensionalVelocityMP flywheelMotionProfile = new OneDimensionalVelocityMP(desiredVelocity, RobotMap.flywheel, Robot.flywheel);
 		flywheelMotionProfile.start();
+	}
+	
+	public void autoControlSpeed() {
+		RobotMap.flywheel.changeControlMode(TalonControlMode.Speed);
+		double dist = Tegra.distance;
+		double flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
+		setFlywheelVelocity setVelocity = new setFlywheelVelocity(flywheelSetSpeed);
 	}
 	
 	public void controlFlywheelVelocity() {

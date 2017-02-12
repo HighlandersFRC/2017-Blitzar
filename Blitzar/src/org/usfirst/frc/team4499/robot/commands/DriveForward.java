@@ -60,7 +60,7 @@ public class DriveForward extends Command{
     	//RobotMap.leftMotorTwo.changeControlMode(TalonControlMode.Follower);
     	rightEncMotor.setPID(kI, kP, kD);
     	leftEncMotor.setPID(kP, kI, kD);
-    	orientation.setPID(0.025, 0.0001, 0);
+    	orientation.setPID(0.025, 0.0001, 0.2);
     	System.out.println("Rotations " + rotations);
     }
 

@@ -46,10 +46,11 @@ public class Robot extends IterativeRobot {
 	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
 	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train subsystem object
 	public static Turret turret = new Turret(); // Construct a new turret subsystem object
-	public static Turn turn = new Turn(90, true);
+	public static Turn turn = new Turn(90, false);
 	public static ShootHigh shootHighAuto = new ShootHigh();
 	public static DriveForward driveStraight = new DriveForward(36); 
 	public static TrackTargetPID trackTarget = new TrackTargetPID();
+	public static AutoFlywheelSpeed autoFlywheelSpeed = new AutoFlywheelSpeed();
 	public static NavXDriveForward gyroDriveForward = new NavXDriveForward(0.5, 2);
 	
 	public static float flyWheelPower = 0;
@@ -126,8 +127,8 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 		
-		//turn.start();
-		shootHighAuto.start();
+		turn.start();
+		//shootHighAuto.start();
 		//driveStraight.start();
 		//gyroDriveForward.start();
 
@@ -141,6 +142,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		SmartDashboard.putNumber("Flywheel velocity", RobotMap.flywheel.getSpeed());
 		Scheduler.getInstance().run();
 	}
 
@@ -215,7 +217,11 @@ public class Robot extends IterativeRobot {
 		//shootHighAuto.start();
 		//driveStraight.start();
 		
-	//	trackTarget.start();
+		// Turret track
+		trackTarget.start();
+		
+		// Auto flywheel speed set
+		autoFlywheelSpeed.start();
 		
 		//turret.controlTurretPositionRelative(0);
 		//turret.controlTurretPositionRelative(0.5);
@@ -230,30 +236,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		
-		//System.out.println("shooter power: " + flyWheelPower);
-		// Drive control
-		/*if (Math.abs(oi.joystickOne.getRawAxis(1)) > 0.2) {
-		RobotMap.leftMotorOne.set(-oi.joystickOne.getRawAxis(1)); // Up on joystick returns lower
-		RobotMap.leftMotorTwo.set(-oi.joystickOne.getRawAxis(1)); // Negative -> Correct direction
-		} else {
-			RobotMap.leftMotorOne.set(0); 
-			RobotMap.leftMotorTwo.set(0);
-		}
-		
-		if (Math.abs(oi.joystickOne.getRawAxis(5)) > 0.2) {
-		RobotMap.rightMotorOne.set(-oi.joystickOne.getRawAxis(5));
-		RobotMap.rightMotorTwo.set(-oi.joystickOne.getRawAxis(5));
-		} else {
-			RobotMap.rightMotorOne.set(0); 
-			RobotMap.rightMotorTwo.set(0);
-		}*/
-		
-		//System.out.println(oi.joystickOne.getRawAxis(5));
-		
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
-			//flywheel.controlFlywheelVelocity();
-			flywheel.controlFlywheelPercentVBus();
+			flywheel.controlFlywheelVelocity();
+			//flywheel.controlFlywheelPercentVBus();
 		}
 		
 		// Control receiver
@@ -292,7 +278,8 @@ public class Robot extends IterativeRobot {
 		}*/
 		//turret.controlTurretPositionRelative(0.5);
 		//turret.controlTurretPositionRelative(OI.joystickOne.getRawAxis(5) * 1);
-		// Control lifter
+		
+		// Control climber
 		/*if (oi.joystickOne.getPOV() == 90) {
 			lifterPower += 0.02;
 		}
@@ -330,12 +317,14 @@ public class Robot extends IterativeRobot {
 		//System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
 	//	System.out.println("Turret velocity " + RobotMap.turretMotor.getSpeed());
 		
-		System.out.println(RobotMap.navx.getYaw());
+		//System.out.println(RobotMap.navx.getYaw());
 		
 		
 		SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
 		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
+		
+		System.out.println(Tegra.distance);
 		
 		/*if (Math.abs(RobotMap.turretMotor.getSpeed()) > 55) {
     		System.out.println("Ended timer");
