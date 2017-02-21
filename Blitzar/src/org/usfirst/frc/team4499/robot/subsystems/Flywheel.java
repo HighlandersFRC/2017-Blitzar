@@ -8,6 +8,7 @@ import org.usfirst.frc.team4499.robot.RobotStats;
 import org.usfirst.frc.team4499.robot.commands.*;
 import org.usfirst.frc.team4499.robot.tools.Tegra;
 import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 /**
@@ -28,26 +29,44 @@ public class Flywheel extends Subsystem {
 	}
 	
 	public void controlFlywheelVelocityMP(double desiredVelocity) {
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		//                                                                                 Goal            MPTalon          Subsystem
-		OneDimensionalVelocityMP flywheelMotionProfile = new OneDimensionalVelocityMP(desiredVelocity, RobotMap.flywheel, Robot.flywheel);
-		flywheelMotionProfile.start();
+		
+		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
+		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+		setFlywheelVelocityMP setFlywheelVelocityMP = new setFlywheelVelocityMP(desiredVelocity);
+		setFlywheelVelocityMP.start();
+		
+		} else {
+			System.out.println("Flywheel encoder not detected!");
+		}
 	}
 	
 	public void autoControlSpeed() {
+		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
 		RobotMap.flywheel.changeControlMode(TalonControlMode.Speed);
 		double dist = Tegra.distance;
 		double flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
 		setFlywheelVelocity setVelocity = new setFlywheelVelocity(flywheelSetSpeed);
+		} else {
+			System.out.println("Flywheel encoder not detected!");
+		}
 	}
 	
 	public void controlFlywheelVelocity() {
 		//RobotMap.flywheel.setP(0.02);
 		//RobotMap.flywheel.setD(0.5);
 		
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
-		ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.Speed);
-		controlFlywheel.start();
+		
+		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
+			RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+			ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.Speed);
+			controlFlywheel.start();
+		} else {
+			System.out.println("Flywheel encoder not detected!");
+		}
+		
 	}
 	
 	public void disableFlywheel() {

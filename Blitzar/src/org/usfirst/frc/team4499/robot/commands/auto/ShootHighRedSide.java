@@ -1,19 +1,24 @@
 package org.usfirst.frc.team4499.robot.commands.auto;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team4499.robot.commands.AutoFlywheelSpeed;
+import org.usfirst.frc.team4499.robot.commands.DriveForward;
+import org.usfirst.frc.team4499.robot.commands.NavXDriveForward;
+import org.usfirst.frc.team4499.robot.commands.TrackTargetPID;
+import org.usfirst.frc.team4499.robot.commands.Turn;
+import org.usfirst.frc.team4499.robot.commands.Wait;
+import org.usfirst.frc.team4499.robot.commands.setFlywheelVelocity;
+import org.usfirst.frc.team4499.robot.commands.setReceiverPower;
+import org.usfirst.frc.team4499.robot.commands.setVortexPower;
 
-import org.usfirst.frc.team4499.robot.commands.*;
-import org.usfirst.frc.team4499.robot.subsystems.*;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class ShootHigh extends CommandGroup {
+public class ShootHighRedSide extends CommandGroup {
 
-	Flywheel flywheel = new Flywheel();
-	
-    public ShootHigh() {
-        // Add Commands here:
+    public ShootHighRedSide() {
+    	// Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
@@ -30,7 +35,7 @@ public class ShootHigh extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addParallel(new setFlywheelVelocity(-2800));
+    	addParallel(new setFlywheelVelocity(-3400));
     	addSequential(new Wait(1));
     	addParallel(new setVortexPower(-1));
     	addParallel(new setReceiverPower(-1));
@@ -40,7 +45,7 @@ public class ShootHigh extends CommandGroup {
     	addParallel(new setVortexPower(0));
     	addParallel(new setReceiverPower(0));
     	
-    	addSequential(new DriveForward(109));
+    	addSequential(new DriveForward(85));
     	addSequential(new Wait(0.5));
     	addSequential(new Turn(90, false));
     	addSequential(new Wait(0.5));

@@ -14,7 +14,7 @@ public class setReceiverPower extends Command {
 
 	private double setPower;
 	
-    public setReceiverPower(double power) {
+    public setReceiverPower(float power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.receiver);

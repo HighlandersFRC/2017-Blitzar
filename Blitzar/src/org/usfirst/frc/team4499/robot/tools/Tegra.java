@@ -80,11 +80,12 @@ public class Tegra implements Runnable{
 			                	theta = 4;
 			                	x = -1;
 			                	y = -1;
-			                	System.out.println("Losts comms with Tegra");
+			                	System.out.println("Lost comms with Tegra");
 			                	break;
 			                }
 			               // int point[] = parsePoint(fromClient);
 			                //System.out.println(fromClient);
+			                System.out.println(fromClient);
 			                JSONObject obj = new JSONObject(fromClient);
 			                x = obj.getInt("xCenter");
 			                y = obj.getInt("yCenter");

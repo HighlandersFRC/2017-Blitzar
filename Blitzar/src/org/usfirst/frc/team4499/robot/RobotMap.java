@@ -22,7 +22,7 @@ public class RobotMap {
 	public static DCMotor leftMotorOne = new DCMotor(1); //1 // Has encoder       accretion 2431
 	public static DCMotor leftMotorTwo = new DCMotor(2); //2
 	public static DCMotor rightMotorOne = new DCMotor(3); //3 // has the encoder
-	public static DCMotor rightMotorTwo = new DCMotor(4); //4 // should have encoder
+	public static DCMotor rightMotorTwo = new DCMotor(4); //4
 	
 	// Accretion
 	// yellow 2 encoder left
@@ -32,7 +32,7 @@ public class RobotMap {
 	
 	
 	public static CANTalon flywheel = new CANTalon(5);
-	public static CANTalon receiverLeft = new CANTalon(6);
+	public static CANTalon receiverLeft = new CANTalon(6); //Does nothing?
 	public static CANTalon receiverRight = new CANTalon(7);
 	public static CANTalon turretMotor = new CANTalon(8);
 	public static CANTalon vortexMotor = new CANTalon(9);
@@ -42,7 +42,7 @@ public class RobotMap {
 	public static AHRS navx = new AHRS(SerialPort.Port.kMXP);
 	
 	//Compressor compressor = new Compressor(0);
-	public static DoubleSolenoid test = new DoubleSolenoid(0, 0, 1);
+	public static DoubleSolenoid basinPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
 	
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:

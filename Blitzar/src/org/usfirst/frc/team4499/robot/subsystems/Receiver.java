@@ -30,7 +30,10 @@ public class Receiver extends Subsystem {
 		Robot.receiverPower = 0;
 	}
 	
-	
+	public void setReceiverPower(float setPower) {
+		setReceiverPower x = new setReceiverPower(setPower);
+		x.start();
+	}
 	
 	
     public void initDefaultCommand() {

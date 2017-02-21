@@ -56,7 +56,7 @@ public class TrackTargetPID extends Command {
     	System.out.println("Angle " + RobotMap.turretMotor.getPosition());
     	System.out.println("SetPoint " + 160 + " Error " + (160 - currentX));
     	System.out.println("Set power to " + -orientation.getResult());
-    	System.out.println("TegraX " + currentX);
+    	System.out.println("Tegra X " + currentX);
     	lastX = currentX;
     	}
     }

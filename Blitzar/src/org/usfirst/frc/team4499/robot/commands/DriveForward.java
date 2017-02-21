@@ -10,6 +10,8 @@ import org.usfirst.frc.team4499.robot.RobotStats;
 import org.usfirst.frc.team4499.robot.tools.DCMotor;
 import org.usfirst.frc.team4499.robot.tools.PID;
 
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 public class DriveForward extends Command{
@@ -25,6 +27,7 @@ public class DriveForward extends Command{
 	private double rightSide;
 	private double leftSide;
 	private double average;
+	private boolean instantlyFinish = false;
 	double rotations; // distance to travel
 	PID rightWheel = new PID(kP,kI,kD); // PID's for both motors
 	PID leftWheel = new PID(kP,kI,kD);
@@ -37,10 +40,26 @@ public class DriveForward extends Command{
     
 	public DriveForward(double inches) {
         //TODO once PID is working change this to distance
+		if (rightEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent
+				&&  leftEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent) {
     	this.rotations = inches / (RobotStats.driveDiameter * Math.PI);
+		} else {
+		//	this.rotations = 0;
+			instantlyFinish = true;
+		}
     }
 	public DriveForward(double feet, double inches){
+		if (rightEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent
+				&&  leftEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent) {
 		this.rotations = (feet * 12 + inches) / (RobotStats.driveDiameter * Math.PI);
+		} else {
+			//this.rotations = 0;
+			instantlyFinish = true;
+		}
 		
 	}
 
@@ -114,7 +133,12 @@ public class DriveForward extends Command{
     	average = ((Math.abs(rightSide) + Math.abs(leftSide)) / 2);
     	//double smallest = Math.min(rightSide, leftSide);
        // return rightSideDone && leftSideDone;
+    	
+    	if (instantlyFinish) {
+    		return true;
+    	} else {
     	return (Math.abs(average - rotations) < 0.15); 
+    	}
     	//return (Math.abs((smallest - rotations)) < 0.15);
     }
 

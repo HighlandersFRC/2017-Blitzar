@@ -1,9 +1,11 @@
 
 package org.usfirst.frc.team4499.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,7 +22,7 @@ import java.io.IOException;
 
 import org.usfirst.frc.team4499.robot.OI;
 import org.usfirst.frc.team4499.robot.subsystems.*;
-
+import org.usfirst.frc.team4499.robot.tools.CMDGroup;
 import org.usfirst.frc.team4499.robot.tools.Tegra;
 
 /**
@@ -37,6 +39,7 @@ public class Robot extends IterativeRobot {
 	Tegra tegra;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+	CMDGroup autoGroup = new CMDGroup();
 	
 	// Variable Declarations
 	
@@ -44,6 +47,7 @@ public class Robot extends IterativeRobot {
 	
 	public static Flywheel flywheel = new Flywheel(); // Construct a flywheel subsystem object
 	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
+	public static Vortex vortex = new Vortex(); // Construct a vortex subsystem object
 	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train subsystem object
 	public static Turret turret = new Turret(); // Construct a new turret subsystem object
 	public static Turn turn = new Turn(90, false);
@@ -99,9 +103,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		
-		
-		
-		
 		Scheduler.getInstance().run();
 	}
 
@@ -126,9 +127,15 @@ public class Robot extends IterativeRobot {
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
+	
+		RobotMap.navx.zeroYaw();
+    	CommandGroup autonomous = AutoChooser.getAuto();
+    	autonomous.start();
+    	autoGroup.add(autonomous);
 		
-		turn.start();
-		//shootHighAuto.start();
+		
+//		turn.start();
+	//	shootHighAuto.start();
 		//driveStraight.start();
 		//gyroDriveForward.start();
 
@@ -161,24 +168,30 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheel.setP(0.05); // 0.05
-		RobotMap.flywheel.setI(0.0001); //0.0005
-		RobotMap.flywheel.setD(0.5); // 5
+		RobotMap.flywheel.setP(0.022);
+		RobotMap.flywheel.setI(0); //0.0005
+		RobotMap.flywheel.setD(1); // 5
 		
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
 		//RobotMap.flywheel.setF(0.078);
-		RobotMap.flywheel.setF(0.01);
+		RobotMap.flywheel.setF(0.03122); //0.03122
 		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
 		RobotMap.leftMotorOne.setInverted(false);
 		RobotMap.leftMotorTwo.setInverted(false);
 		
+		RobotMap.rightMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.leftMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.rightMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.leftMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		
 		RobotMap.flywheel.configNominalOutputVoltage(+0f, -0f);
-		RobotMap.flywheel.configPeakOutputVoltage(+0f, -12f); // Only drive forward
+		RobotMap.flywheel.configPeakOutputVoltage(+1f, -12f); // Only drive forward
 		RobotMap.flywheel.set(0);
-		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+		RobotMap.flywheel.setPosition(0);
+		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.flywheel.reverseOutput(false);
 		RobotMap.flywheel.reverseSensor(true);
 		RobotMap.flywheel.setInverted(false);
@@ -205,11 +218,13 @@ public class Robot extends IterativeRobot {
 		
 		
 		// Set flywheel for testing purposes
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
 		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-		//RobotMap.flywheel.set(-3950);
+		//RobotMap.flywheel.set(-3850);
 		//RobotMap.flywheel.set(-0.5);
 		
+		
+	//	flywheel.controlFlywheelVelocityMP(3600);
 		//flywheel.controlFlywheelVelocityMP(-10);
 		
 		
@@ -218,10 +233,10 @@ public class Robot extends IterativeRobot {
 		//driveStraight.start();
 		
 		// Turret track
-		trackTarget.start();
+		//trackTarget.start();
 		
 		// Auto flywheel speed set
-		autoFlywheelSpeed.start();
+		//autoFlywheelSpeed.start();
 		
 		//turret.controlTurretPositionRelative(0);
 		//turret.controlTurretPositionRelative(0.5);
@@ -238,18 +253,14 @@ public class Robot extends IterativeRobot {
 		
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
-			flywheel.controlFlywheelVelocity();
-			//flywheel.controlFlywheelPercentVBus();
+			//flywheel.controlFlywheelVelocity();
+			flywheel.controlFlywheelPercentVBus();
 		}
 		
+		/*
 		// Control receiver
 		if (oi.receiverSpeedIncrease.get() || oi.receiverSpeedDecrease.get()) {
 			receiver.controlReceiver();
-		}
-		
-		// Control turret
-		if (oi.turretPanLeft.get() || oi.turretPanRight.get()) {
-			turret.controlTurretPower();
 		}
 		
 		// Control vortex
@@ -265,8 +276,38 @@ public class Robot extends IterativeRobot {
 		if (vortexPower < 0) {
 			vortexPower = 0;
 		}
-		
 		RobotMap.vortexMotor.set(-vortexPower);
+		*/
+		
+		
+		// Vortex and receiver
+		if (OI.startFire.get()) {
+			vortex.setVortexPower(-1);
+			receiver.setReceiverPower(1);
+		}
+		
+		if (oi.stopFire.get()) {
+			vortex.setVortexPower(0);
+			receiver.setReceiverPower(0);
+		}
+		
+		// Control turret
+		if (oi.turretPanLeft.get() || oi.turretPanRight.get()) {
+			turret.controlTurretPower();
+		}
+		
+		
+		
+		// Control basin
+		if (oi.basinOut.get()) {
+			RobotMap.basinPiston.set(DoubleSolenoid.Value.kForward); // Both pistons``````
+		}
+		
+		if (oi.basinIn.get()) {
+			RobotMap.basinPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
+		}
+		
+	
 		
 		
 		/*if (Tegra.x != -1) {
@@ -280,8 +321,8 @@ public class Robot extends IterativeRobot {
 		//turret.controlTurretPositionRelative(OI.joystickOne.getRawAxis(5) * 1);
 		
 		// Control climber
-		/*if (oi.joystickOne.getPOV() == 90) {
-			lifterPower += 0.02;
+		if (oi.joystickOne.getPOV() == 90) {
+			lifterPower += 0.05;
 		}
 		if (oi.joystickOne.getPOV() == 270 || oi.joystickOne.getPOV() == 315 || oi.joystickOne.getPOV() == 225){
 			lifterPower -= 0.05;
@@ -291,12 +332,12 @@ public class Robot extends IterativeRobot {
 		}
 		if (lifterPower < 0) {
 			lifterPower = 0;
-		}*/
+		}
 		
 		//System.out.println("lifterPower " + lifterPower);
 		
-		//RobotMap.climbMotorOne.set(-lifterPower);
-		//RobotMap.climbMotorTwo.set(lifterPower);
+		RobotMap.climbMotorOne.set(-lifterPower);
+		RobotMap.climbMotorTwo.set(lifterPower);
 		//RobotMap.climbMotorOne.set(0); //negative
 		//RobotMap.climbMotorTwo.set(0); //positive
 	
@@ -320,11 +361,13 @@ public class Robot extends IterativeRobot {
 		//System.out.println(RobotMap.navx.getYaw());
 		
 		
-		SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
+		//SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
 		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
 		
 		
-		System.out.println(Tegra.distance);
+		//System.out.println("Flywheel position " + RobotMap.flywheel.getPosition());
+		System.out.println("Flywheel power " + RobotMap.flywheel.getOutputVoltage());
+	//	System.out.println("Tegra distance " + Tegra.distance);
 		
 		/*if (Math.abs(RobotMap.turretMotor.getSpeed()) > 55) {
     		System.out.println("Ended timer");
@@ -336,9 +379,16 @@ public class Robot extends IterativeRobot {
 		previousVelocity = RobotMap.turretMotor.getSpeed();
     	previousTime = Timer.getFPGATimestamp();*/
 		
-		
+		//System.out.println("Tegra Y " + Tegra.y);
 		//System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
 		//System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());
+		
+		// Encoder sees 50 rotations, wheel turns 22 times
+		
+		
+		//System.out.println("Right Enc Pos " + RobotMap.rightMotorOne.getPosition() + " Left Enc Pos " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
+		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
 		Scheduler.getInstance().run();
 	}
 
