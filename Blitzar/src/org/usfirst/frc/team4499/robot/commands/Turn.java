@@ -7,20 +7,26 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
-	private double kI = 0.001; //0.0002
- 	private double kP = 0.03; //0.02
-	private double kD = 0.1; //0.05
+	private double kI = 0.0004; //0.0002
+ 	private double kP = 0.02; //0.02
+	private double kD = 0.05; //0.05
 	private double target = 0;
 	private int whichWay = 0;
 	private boolean absolute;
 	private double degrees;
+	
+	float previousYaw;
+	float outdatedYaw;
+	float previousYawPlaceholder;
+	float outdatedYawPlaceholder;
+	
 	double startingAngle;
 	Preferences prefs;
 	PID orientation = new PID(kP,kI,kD);
 	public Turn (double degrees, boolean absolute){
 		
-		orientation.setMaxOutput(.4);
-		orientation.setMinOutput(-.4);
+		orientation.setMaxOutput(0.5);
+		orientation.setMinOutput(-0.5);
 		orientation.setContinuous(true);
 		orientation.setMaxInput(360);
 		orientation.setMinInput(0);
@@ -32,13 +38,15 @@ public class Turn extends Command {
 			degrees = degrees + 360;
 		}
 		this.degrees = degrees;
-		this.absolute = absolute;
-		
+		this.absolute = absolute;	
 	}
 	
 	@Override
 	protected void initialize() {	
 		//RobotMap.navx.zeroYaw();
+		
+		previousYaw = RobotMap.navx.getYaw();
+		outdatedYaw = RobotMap.navx.getYaw();
 		
 		if(absolute == false){
 			startingAngle = RobotMap.navx.getYaw();
@@ -66,6 +74,7 @@ public class Turn extends Command {
     	RobotMap.rightMotorOne.set(-orientation.getResult());
     	RobotMap.rightMotorTwo.set(-orientation.getResult());
 		System.out.println("Angle: " + RobotMap.navx.getYaw() + " Target: " + target);
+		System.out.println("orientation.getResult() " + orientation.getResult());
 	}
 
 	@Override
@@ -78,8 +87,27 @@ public class Turn extends Command {
 
 	@Override
 	protected boolean isFinished() {
+		
+		previousYawPlaceholder = previousYaw;
+		outdatedYawPlaceholder = outdatedYaw;
+		
+		boolean outdatedYawInRange = Math.abs(target - outdatedYaw) < 1;
+		boolean previousYawInRange = Math.abs(target - previousYaw) < 1;
+		boolean yawInRange = Math.abs(target - RobotMap.navx.getYaw()) < 0.5;
+		
+		outdatedYaw = previousYaw;
+		previousYaw = RobotMap.navx.getYaw();
+		if (outdatedYawInRange && previousYawInRange && yawInRange) {
+			System.out.println("Finished turn, " + outdatedYawPlaceholder + " " + previousYawPlaceholder + " " + RobotMap.navx.getYaw() + " Goal: " + target);
+			return true;
+		} else {
+			return false;
+		}
+		//return (outdatedYawInRange && previousYawInRange && yawInRange && (orientation.getResult() < 1));
+		
 		//return Math.abs(target - RobotMap.navx.getYaw()) < 2 && orientation.getResult() <.05;
-		return Math.abs(target - RobotMap.navx.getYaw()) < 1;
+		
+		//return Math.abs(target - RobotMap.navx.getYaw()) < 1;
 		//return false;
 	}
 	

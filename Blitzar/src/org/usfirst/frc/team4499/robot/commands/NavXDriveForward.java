@@ -52,7 +52,7 @@ public class NavXDriveForward extends Command {
     	
     	//RobotMap.motorRightOne.set(speed);
     	//RobotMap.motorRightTwo.set(speed);
-    	System.out.println("Orientation: " + RobotMap.navx.getAngle()+"Start Angle:"+ startAngle+ "Response:" +  orientation.getResult());
+    	//System.out.println("Orientation: " + RobotMap.navx.getAngle()+"Start Angle:"+ startAngle+ "Response:" +  orientation.getResult());
     	//if(RobotMap.navx.getWorldLinearAccelZ() < -.5 &&!across){
     	//	time = 2 + Timer.getFPGATimestamp();
     	//	across = true;

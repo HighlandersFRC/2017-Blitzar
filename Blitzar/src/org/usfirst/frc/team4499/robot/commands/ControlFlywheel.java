@@ -23,15 +23,15 @@ public class ControlFlywheel extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	this.talonControlMode = talonControlMode;
-    	RobotMap.flywheel.changeControlMode(talonControlMode);
+    	RobotMap.flywheelMaster.changeControlMode(talonControlMode);
     	requires(Robot.flywheel);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	flyWheelPower = Robot.flyWheelPower;
-    	RobotMap.flywheel.setAllowableClosedLoopErr(0);
-    	RobotMap.flywheel.clearIAccum();
+    	RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
+    	RobotMap.flywheelMaster.clearIAccum();
     	
     }
 
@@ -63,7 +63,7 @@ public class ControlFlywheel extends Command {
 				System.out.println("Setting flywheel power to 0 because it was greater than 0");
 			}
 			
-			RobotMap.flywheel.set(flyWheelPower);
+			RobotMap.flywheelMaster.set(flyWheelPower);
     	}
 		
     	
@@ -101,7 +101,7 @@ public class ControlFlywheel extends Command {
    	    	// Now ready to be set to Talon'
    	    	//System.out.println("Now it is " + flyWheelPower + " in encoder velocity");
    			
-   			RobotMap.flywheel.set(flyWheelPower);
+   			RobotMap.flywheelMaster.set(flyWheelPower);
    			
    			// Get flywheel power back to RPM
    			//System.out.println("Flywheel power was " + flyWheelPower + " in velocity");

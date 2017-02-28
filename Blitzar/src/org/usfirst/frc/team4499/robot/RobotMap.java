@@ -31,19 +31,24 @@ public class RobotMap {
 	// green encoder right 1
 	
 	
-	public static CANTalon flywheel = new CANTalon(5);
-	public static CANTalon receiverLeft = new CANTalon(6); //Does nothing?
+	
+	public static CANTalon flywheelMaster = new CANTalon(5);
+	public static CANTalon flywheelSlave = new CANTalon(6);
+	
 	public static CANTalon receiverRight = new CANTalon(7);
 	public static CANTalon turretMotor = new CANTalon(8);
 	public static CANTalon vortexMotor = new CANTalon(9);
+	
 	public static CANTalon climbMotorOne = new CANTalon(10);
 	public static CANTalon climbMotorTwo = new CANTalon(11);
+	public static CANTalon agitatorMotor = new CANTalon(12);
 	
 	public static AHRS navx = new AHRS(SerialPort.Port.kMXP);
 	
 	//Compressor compressor = new Compressor(0);
-	public static DoubleSolenoid basinPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
-	
+	//public static DoubleSolenoid basinPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
+	public static DoubleSolenoid gearPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
+	public static DoubleSolenoid climbPiston = new DoubleSolenoid(0, 2, 3);
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;

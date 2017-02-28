@@ -17,19 +17,19 @@ public class setFlywheelVelocity extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.flywheel);
-    	RobotMap.flywheel.setAllowableClosedLoopErr(0);
-    	RobotMap.flywheel.clearIAccum();
+    	RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
+    	RobotMap.flywheelMaster.clearIAccum();
     	setVelocity = desiredVelocity;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+    	RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Speed);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.flywheel.set(setVelocity);
+    	RobotMap.flywheelMaster.set(setVelocity);
     }
 
     // Make this return true when this Command no longer needs to run execute()

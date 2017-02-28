@@ -47,8 +47,16 @@ public class OI {
 	
 	public static Joystick joystickOne = new Joystick(0);
 
-	public static JoystickButton basinOut = new JoystickButton(joystickOne, 5); // Left bumper
-	public static JoystickButton basinIn = new JoystickButton(joystickOne, 6); // Right bumper
+	
+	// Climber piston
+	public static JoystickButton climbPistonOut = new JoystickButton(joystickOne, 6); // Right bumper
+	public static JoystickButton climbPistonIn = new JoystickButton(joystickOne, 5); // Left bumper
+	
+	// Basin
+	public static JoystickButton basinOut = new JoystickButton(joystickOne, 2); // B
+	public static JoystickButton basinIn = new JoystickButton(joystickOne, 3); // X
+	
+
 	
 	/////////
 	
@@ -58,6 +66,10 @@ public class OI {
 	// Flywheel, Turret, Receiver, Vortex
 	
 	public static Joystick joystickTwo = new Joystick(1);
+	
+	//gear
+	public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // 
+	public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // 
 	
 	// Flywheel 
 	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickTwo, 1); // A

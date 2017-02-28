@@ -16,16 +16,13 @@ public class Receiver extends Subsystem {
     // here. Call these from Commands.
 
 	public void controlReceiver() {
-		RobotMap.receiverLeft.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		RobotMap.receiverRight.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		ControlReceiver controlReceiver = new ControlReceiver();
 		controlReceiver.start();
 	}
 	
 	public void disableReceiver() {
-		RobotMap.receiverLeft.changeControlMode(CANTalon.TalonControlMode.Current);
 		RobotMap.receiverRight.changeControlMode(CANTalon.TalonControlMode.Current);
-		RobotMap.receiverLeft.set(0);
 		RobotMap.receiverRight.set(0);
 		Robot.receiverPower = 0;
 	}

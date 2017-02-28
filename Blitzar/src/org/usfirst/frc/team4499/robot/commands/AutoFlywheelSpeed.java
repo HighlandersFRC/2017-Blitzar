@@ -24,9 +24,9 @@ public class AutoFlywheelSpeed extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	RobotMap.flywheel.changeControlMode(TalonControlMode.Speed);
-    	RobotMap.flywheel.setAllowableClosedLoopErr(0);
-    	RobotMap.flywheel.clearIAccum();
+    	RobotMap.flywheelMaster.changeControlMode(TalonControlMode.Speed);
+    	RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
+    	RobotMap.flywheelMaster.clearIAccum();
     	if (Tegra.x != -1) {
 		dist = Tegra.distance;
 		flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
@@ -38,7 +38,7 @@ public class AutoFlywheelSpeed extends Command {
     	if (Tegra.x != -1) {
     	dist = Tegra.distance;
     	flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
-    	RobotMap.flywheel.set(-flywheelSetSpeed);
+    	RobotMap.flywheelMaster.set(-flywheelSetSpeed);
     	System.out.println("Setting flywheel speed");
     	}
     }
@@ -50,12 +50,12 @@ public class AutoFlywheelSpeed extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	RobotMap.flywheel.set(0);
+    	RobotMap.flywheelMaster.set(0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	RobotMap.flywheel.set(0);
+    	RobotMap.flywheelMaster.set(0);
     }
 }

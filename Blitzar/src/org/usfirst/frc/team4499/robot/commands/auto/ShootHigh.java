@@ -30,28 +30,38 @@ public class ShootHigh extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	addParallel(new setFlywheelVelocity(-2800));
+    	
+    	
+    	
+    	// Robot starts 28.5 inches from corner
+    	
+    	/*
+    	addParallel(new setFlywheelVelocity(-4000));
     	addSequential(new Wait(1));
     	addParallel(new setVortexPower(-1));
     	addParallel(new setReceiverPower(-1));
     	addSequential(new Wait(3));
+    	*/
     	
     	addParallel(new setFlywheelVelocity(0));
     	addParallel(new setVortexPower(0));
     	addParallel(new setReceiverPower(0));
     	
-    	addSequential(new DriveForward(109));
+    	addSequential(new DriveForward(75.5)); //7.25 inches past hopper is 78.5 inches from wall
     	addSequential(new Wait(0.5));
-    	addSequential(new Turn(90, false));
+    	addSequential(new Turn(90, true));
     	addSequential(new Wait(0.5));
-    	addSequential(new NavXDriveForward(0.4, 2));
     	
-    	//addParallel(new setFlywheelVelocity(-4000));
-    	addParallel(new TrackTargetPID());
-    	addParallel(new AutoFlywheelSpeed());
+    	//addSequential(new NavXDriveForward(0.38, 2));
+    	addSequential(new DriveForward(40), 2);
+    	addSequential(new NavXDriveForward(0.2, 1));
+    	
+    	addParallel(new setFlywheelVelocity(-4000));
+    	//addParallel(new TrackTargetPID());
+    	//addParallel(new AutoFlywheelSpeed());
     	addSequential(new Wait(1));
     	addParallel(new setVortexPower(-1));
     	addParallel(new setReceiverPower(-1));
-    	
+    
     }
 }

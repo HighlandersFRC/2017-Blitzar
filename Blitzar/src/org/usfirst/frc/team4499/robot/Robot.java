@@ -17,6 +17,7 @@ import org.usfirst.frc.team4499.robot.subsystems.ExampleSubsystem;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import java.io.IOException;
 
@@ -38,7 +39,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	Tegra tegra;
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+	//SendableChooser<Command> chooser = new SendableChooser<>();
 	CMDGroup autoGroup = new CMDGroup();
 	
 	// Variable Declarations
@@ -52,7 +53,7 @@ public class Robot extends IterativeRobot {
 	public static Turret turret = new Turret(); // Construct a new turret subsystem object
 	public static Turn turn = new Turn(90, false);
 	public static ShootHigh shootHighAuto = new ShootHigh();
-	public static DriveForward driveStraight = new DriveForward(36); 
+	public static DriveForward driveStraight = new DriveForward(75.5); 
 	public static TrackTargetPID trackTarget = new TrackTargetPID();
 	public static AutoFlywheelSpeed autoFlywheelSpeed = new AutoFlywheelSpeed();
 	public static NavXDriveForward gyroDriveForward = new NavXDriveForward(0.5, 2);
@@ -75,9 +76,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		
 		oi = new OI();
-		chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
+		//chooser.addDefault("Default Auto", new ExampleCommand());
+	//	chooser.addObject("My Auto", new MyAutoCommand());
+		//SmartDashboard.putData("Auto mode", chooser);
 		
 		RobotMap.navx.zeroYaw();
 		
@@ -119,7 +120,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		//autonomousCommand = chooser.getSelected();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -131,11 +132,11 @@ public class Robot extends IterativeRobot {
 		RobotMap.navx.zeroYaw();
     	CommandGroup autonomous = AutoChooser.getAuto();
     	autonomous.start();
-    	autoGroup.add(autonomous);
+    	//autoGroup.add(autonomous);
 		
 		
 //		turn.start();
-	//	shootHighAuto.start();
+		//shootHighAuto.start();
 		//driveStraight.start();
 		//gyroDriveForward.start();
 
@@ -149,7 +150,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		SmartDashboard.putNumber("Flywheel velocity", RobotMap.flywheel.getSpeed());
+		//SmartDashboard.putNumber("Flywheel velocity", RobotMap.flywheelMaster.getSpeed());
+		
+		//SmartDashboard.putNumber("NavX Yaw in auto " , RobotMap.navx.getYaw());
 		Scheduler.getInstance().run();
 	}
 
@@ -161,21 +164,23 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		gotToPosition = true;
 		startTime = Timer.getFPGATimestamp();
-		previousVelocity = RobotMap.flywheel.getEncVelocity();
+		previousVelocity = RobotMap.flywheelMaster.getEncVelocity();
 		
 		flyWheelPower = 0;
 		receiverPower = 0;
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheel.setP(0.022);
-		RobotMap.flywheel.setI(0); //0.0005
-		RobotMap.flywheel.setD(1); // 5
+		RobotMap.flywheelMaster.setP(0.06);
+		RobotMap.flywheelMaster.setI(0.0002); //0.0002
+		RobotMap.flywheelMaster.setD(0.7); // 1.3
+		
+		RobotMap.navx.zeroYaw();
 		
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
 		//RobotMap.flywheel.setF(0.078);
-		RobotMap.flywheel.setF(0.03122); //0.03122
+		RobotMap.flywheelMaster.setF(0.02141); //0.03122 0.015
 		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
@@ -187,17 +192,18 @@ public class Robot extends IterativeRobot {
 		RobotMap.rightMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		RobotMap.leftMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		
-		RobotMap.flywheel.configNominalOutputVoltage(+0f, -0f);
-		RobotMap.flywheel.configPeakOutputVoltage(+1f, -12f); // Only drive forward
-		RobotMap.flywheel.set(0);
-		RobotMap.flywheel.setPosition(0);
-		RobotMap.flywheel.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.flywheel.reverseOutput(false);
-		RobotMap.flywheel.reverseSensor(true);
-		RobotMap.flywheel.setInverted(false);
-		//RobotMap.flywheel.enableBrakeMode(false);
+		RobotMap.flywheelMaster.configNominalOutputVoltage(+0f, -0f);
+		RobotMap.flywheelMaster.configPeakOutputVoltage(+1f, -12f); // Only drive forward
+		RobotMap.flywheelMaster.set(0);
+		RobotMap.flywheelMaster.setPosition(0);
+		RobotMap.flywheelMaster.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.flywheelMaster.reverseOutput(false);
+		RobotMap.flywheelMaster.reverseSensor(true);
+		RobotMap.flywheelMaster.setInverted(false);
+		//RobotMap.flywheelMaster.enableBrakeMode(false);
+		RobotMap.flywheelSlave.changeControlMode(TalonControlMode.Follower);
+		RobotMap.flywheelSlave.set(5);
 		
-		RobotMap.receiverLeft.set(0);
 		RobotMap.receiverRight.set(0);
 		
 		RobotMap.climbMotorOne.set(0);
@@ -214,18 +220,20 @@ public class Robot extends IterativeRobot {
 		RobotMap.turretMotor.setF(2.725); //2.725
 		RobotMap.turretMotor.setVoltageRampRate(1000);
 		
+		RobotMap.agitatorMotor.changeControlMode(TalonControlMode.PercentVbus);
+		
 		driveTrain.controlDriveTrain();
 		
 		
 		// Set flywheel for testing purposes
-		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
-		//RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
-		//RobotMap.flywheel.set(-3850);
-		//RobotMap.flywheel.set(-0.5);
+		//RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Speed);
+		//RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		//RobotMap.flywheelMaster.set(-3000);
+		//RobotMap.flywheelMaster.set(-0.5);
 		
 		
 	//	flywheel.controlFlywheelVelocityMP(3600);
-		//flywheel.controlFlywheelVelocityMP(-10);
+		//flywheelMaster.controlFlywheelVelocityMP(-10);
 		
 		
 		//turn.start();
@@ -253,8 +261,8 @@ public class Robot extends IterativeRobot {
 		
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
-			//flywheel.controlFlywheelVelocity();
-			flywheel.controlFlywheelPercentVBus();
+			flywheel.controlFlywheelVelocity();
+			//flywheel.controlFlywheelPercentVBus();
 		}
 		
 		/*
@@ -262,8 +270,10 @@ public class Robot extends IterativeRobot {
 		if (oi.receiverSpeedIncrease.get() || oi.receiverSpeedDecrease.get()) {
 			receiver.controlReceiver();
 		}
+		*/
 		
 		// Control vortex
+		/*
 		if (oi.vortexSpeedIncrease.get()) {
 			vortexPower += 0.01;
 		}
@@ -276,19 +286,28 @@ public class Robot extends IterativeRobot {
 		if (vortexPower < 0) {
 			vortexPower = 0;
 		}
-		RobotMap.vortexMotor.set(-vortexPower);
+		RobotMap.agitatorMotor.set(vortexPower);
 		*/
+		
+		if (oi.vortexSpeedIncrease.get()) {
+			vortex.setVortexPower(1);
+			receiver.setReceiverPower(-1);
+			RobotMap.agitatorMotor.set(-1);
+		}
+		
 		
 		
 		// Vortex and receiver
 		if (OI.startFire.get()) {
 			vortex.setVortexPower(-1);
 			receiver.setReceiverPower(1);
+			RobotMap.agitatorMotor.set(1);
 		}
 		
 		if (oi.stopFire.get()) {
 			vortex.setVortexPower(0);
 			receiver.setReceiverPower(0);
+			RobotMap.agitatorMotor.set(0);
 		}
 		
 		// Control turret
@@ -299,14 +318,32 @@ public class Robot extends IterativeRobot {
 		
 		
 		// Control basin
-		if (oi.basinOut.get()) {
+	/*	if (oi.basinOut.get()) {
 			RobotMap.basinPiston.set(DoubleSolenoid.Value.kForward); // Both pistons``````
 		}
 		
 		if (oi.basinIn.get()) {
 			RobotMap.basinPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
 		}
+	*/	
+		// gear
+		if (oi.gearOut.get()) {
+			RobotMap.gearPiston.set(DoubleSolenoid.Value.kForward); // Both pistons``````
+		}
 		
+		if (oi.gearIn.get()) {
+			RobotMap.gearPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
+		}
+		
+		// climber
+		
+		if (oi.climbPistonOut.get()) {
+			RobotMap.climbPiston.set(DoubleSolenoid.Value.kForward);
+		}
+		
+		if (oi.climbPistonIn.get()) {
+			RobotMap.climbPiston.set(DoubleSolenoid.Value.kReverse);
+		}
 	
 		
 		
@@ -321,6 +358,7 @@ public class Robot extends IterativeRobot {
 		//turret.controlTurretPositionRelative(OI.joystickOne.getRawAxis(5) * 1);
 		
 		// Control climber
+		
 		if (oi.joystickOne.getPOV() == 90) {
 			lifterPower += 0.05;
 		}
@@ -336,8 +374,29 @@ public class Robot extends IterativeRobot {
 		
 		//System.out.println("lifterPower " + lifterPower);
 		
-		RobotMap.climbMotorOne.set(-lifterPower);
+		RobotMap.climbMotorOne.set(lifterPower);
 		RobotMap.climbMotorTwo.set(lifterPower);
+		/*
+		 //COMP BOT
+		if (OI.climbFullPower.get()) {
+			RobotMap.climbMotorOne.set(1); //negative
+			RobotMap.climbMotorTwo.set(1); //positive
+		} else {
+			RobotMap.climbMotorOne.set(0);
+			RobotMap.climbMotorTwo.set(0);
+		}*/
+		
+		
+		//PRACTICE BOT
+		/*
+		if (OI.climbFullPower.get()) {
+			RobotMap.climbMotorOne.set(1); //negative
+			RobotMap.climbMotorTwo.set(1); //positive
+		} else {
+			RobotMap.climbMotorOne.set(0);
+			RobotMap.climbMotorTwo.set(0);
+		}
+		*/
 		//RobotMap.climbMotorOne.set(0); //negative
 		//RobotMap.climbMotorTwo.set(0); //positive
 	
@@ -362,11 +421,12 @@ public class Robot extends IterativeRobot {
 		
 		
 		//SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
-		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheel.getSpeed());
+		SmartDashboard.putNumber("NavX Yaw" , RobotMap.navx.getYaw());
+		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheelMaster.getSpeed());
 		
 		
 		//System.out.println("Flywheel position " + RobotMap.flywheel.getPosition());
-		System.out.println("Flywheel power " + RobotMap.flywheel.getOutputVoltage());
+		//System.out.println("Flywheel power " + RobotMap.flywheelMaster.getOutputVoltage());
 	//	System.out.println("Tegra distance " + Tegra.distance);
 		
 		/*if (Math.abs(RobotMap.turretMotor.getSpeed()) > 55) {

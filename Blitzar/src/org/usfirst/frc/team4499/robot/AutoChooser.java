@@ -12,33 +12,33 @@ public class AutoChooser {
 		
 		if(OI.dialOne.get()){
 			// ChevalDeFrise Defense
-			defense = new NoAuto();
-    		System.out.println("ChevalDeFrise Chosen");
+			defense = new DriveForwardAuto();
+    		System.out.println("DRIVE FORWARD SELECTED");
     	}
     	else if(OI.dialTwo.get()){
     		// Portcullis Defense
-    		defense = new ShootHigh();
-    		System.out.println("PortCullis Chosen");
+    		defense = new ShootHighRedSide();
+    		System.out.println("SHOOT HIGH RED SIDE SELECTED");
     	}
     	else if(OI.dialThree.get()){
     		// D_Defense
-    		defense = new DriveForwardAuto();
-    		System.out.println("D Defense Chosen");
+    		defense = new ShootHighBlueSide();
+    		System.out.println("SHOOT HIGH BLUE SIDE SELECTED");
     	}
     	else if(OI.dialFour.get()){
     		// B_Defense
     		defense = new NoAuto();
-    		System.out.println("B_Defense Chosen");
+    		System.out.println("NO AUTO SELECTED");
     	}
     	else if(OI.dialFive.get()){
     		//Low Bar
     		defense = new NoAuto();
-    		System.out.println("Low Bar Chosen");
+    	//	System.out.println("Low Bar Chosen");
     	}
     	else{
     		//NoAuto
     		defense = new NoAuto();
-    		System.out.println(" No Autonomous Chosen");
+    		System.out.println("NO AUTO CHOSEN");
     	}
 		return defense;
 	}

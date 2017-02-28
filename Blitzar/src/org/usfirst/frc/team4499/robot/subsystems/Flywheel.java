@@ -23,16 +23,16 @@ public class Flywheel extends Subsystem {
 	public static float maxFlywheelAcceleration = RobotStats.maxFlywheelAcceleration; // Ticks per second^2
 
 	public void controlFlywheelPercentVBus() {
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.PercentVbus);
 		controlFlywheel.start();
 	}
 	
 	public void controlFlywheelVelocityMP(double desiredVelocity) {
 		
-		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+		if (RobotMap.flywheelMaster.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
+		RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
 		setFlywheelVelocityMP setFlywheelVelocityMP = new setFlywheelVelocityMP(desiredVelocity);
 		setFlywheelVelocityMP.start();
 		
@@ -42,9 +42,9 @@ public class Flywheel extends Subsystem {
 	}
 	
 	public void autoControlSpeed() {
-		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+		if (RobotMap.flywheelMaster.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
-		RobotMap.flywheel.changeControlMode(TalonControlMode.Speed);
+		RobotMap.flywheelMaster.changeControlMode(TalonControlMode.Speed);
 		double dist = Tegra.distance;
 		double flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
 		setFlywheelVelocity setVelocity = new setFlywheelVelocity(flywheelSetSpeed);
@@ -58,9 +58,9 @@ public class Flywheel extends Subsystem {
 		//RobotMap.flywheel.setD(0.5);
 		
 		
-		if (RobotMap.flywheel.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+		if (RobotMap.flywheelMaster.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
-			RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+			RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Speed);
 			ControlFlywheel controlFlywheel = new ControlFlywheel(CANTalon.TalonControlMode.Speed);
 			controlFlywheel.start();
 		} else {
@@ -70,9 +70,9 @@ public class Flywheel extends Subsystem {
 	}
 	
 	public void disableFlywheel() {
-		RobotMap.flywheel.changeControlMode(CANTalon.TalonControlMode.Current);
+		RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Current);
 		Robot.flyWheelPower = 0;
-		RobotMap.flywheel.set(0);
+		RobotMap.flywheelMaster.set(0);
 	}
 	
 	public void accelerateToVelocity(float desiredVelocity) {
