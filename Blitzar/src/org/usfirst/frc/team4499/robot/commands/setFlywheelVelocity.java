@@ -9,27 +9,30 @@ import com.ctre.CANTalon;
 /**
  *
  */
-public class setFlywheelVelocity extends Command {
+public class SetFlywheelVelocity extends Command {
 
 	double setVelocity;
 	
-    public setFlywheelVelocity(double desiredVelocity) {
+    public SetFlywheelVelocity(double desiredVelocity) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.flywheel);
-    	RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
-    	RobotMap.flywheelMaster.clearIAccum();
+    	//RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
+    	//RobotMap.flywheelMaster.clearIAccum();
     	setVelocity = desiredVelocity;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Speed);
+    //	RobotMap.flywheelMaster.set(setVelocity);
+    	RobotMap.flywheelMaster.set(setVelocity);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	RobotMap.flywheelMaster.set(setVelocity);
+    	System.out.println("setpoint " + RobotMap.flywheelMaster.getSetpoint());
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -40,6 +43,7 @@ public class setFlywheelVelocity extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("End");
     }
 
     // Called when another command which requires one or more of the same

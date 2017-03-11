@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class setVortexPower extends Command {
+public class SetVortexPower extends Command {
 
 	float setPower;
 	
-    public setVortexPower(float vortexPower) {
+    public SetVortexPower(float vortexPower) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.vortex);

@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class setFlywheelVelocityMP extends Command {
+public class SetFlywheelVelocityMP extends Command {
 
 	private CANTalon flywheel = RobotMap.flywheelMaster;
 	private double goalVelocity;
 	
-    public setFlywheelVelocityMP(double desiredVelocity) {
+    public SetFlywheelVelocityMP(double desiredVelocity) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.flywheel);

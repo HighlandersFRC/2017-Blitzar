@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class setReceiverPower extends Command {
+public class SetReceiverPower extends Command {
 
 	private double setPower;
 	
-    public setReceiverPower(float power) {
+    public SetReceiverPower(float power) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.receiver);
