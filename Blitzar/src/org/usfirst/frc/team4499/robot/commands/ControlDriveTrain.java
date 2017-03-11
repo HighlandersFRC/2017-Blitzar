@@ -42,10 +42,48 @@ public class ControlDriveTrain extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
+    
+    	if (OI.climbPistonOut.get()){
     	if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
+    		if (leftMotorOne.getOutputCurrent() > 10) {
+    			leftMotorOne.set(0);
+    		} else {
+    		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
+    		}
+    		if (leftMotorTwo.getOutputCurrent() > 10) {
+    			leftMotorTwo.set(0);
+    		} else {
+    		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
+    		}
+    	} else {
+    		leftMotorOne.set(0); 
+    		leftMotorTwo.set(0);
+    	}
+    		
+    	if (Math.abs(OI.joystickOne.getRawAxis(5)) > 0.2) {
+    		if (rightMotorOne.getOutputCurrent() > 10) {
+    			rightMotorOne.set(0);
+    		} else {
+    		rightMotorOne.set(-OI.joystickOne.getRawAxis(5));
+    		}
+    		
+    		if (rightMotorTwo.getOutputCurrent() > 10) {
+    			rightMotorTwo.set(0);
+    		} else {
+    		rightMotorTwo.set(-OI.joystickOne.getRawAxis(5));
+    		}
+    		
+    	} else {
+    		rightMotorOne.set(0); 
+    		rightMotorTwo.set(0);
+    	}
+    	
+    	} else {
+    	if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
+    		
     		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
     		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
+    		
     	} else {
     		leftMotorOne.set(0); 
     		leftMotorTwo.set(0);
@@ -54,10 +92,32 @@ public class ControlDriveTrain extends Command {
     	if (Math.abs(OI.joystickOne.getRawAxis(5)) > 0.2) {
     		rightMotorOne.set(-OI.joystickOne.getRawAxis(5));
     		rightMotorTwo.set(-OI.joystickOne.getRawAxis(5));
+    		
+    		
     	} else {
     		rightMotorOne.set(0); 
     		rightMotorTwo.set(0);
     	}
+    	}
+    	
+    	/*if (rightMotorOne.getOutputCurrent() > 20) {
+			rightMotorOne.set(0);
+			System.out.println("set right1 to 0");
+		}
+    	if (rightMotorTwo.getOutputCurrent() > 20) {
+			rightMotorTwo.set(0);
+			System.out.println("set right2 to 0");
+		}
+    	if (leftMotorOne.getOutputCurrent() > 20) {
+			leftMotorOne.set(0);
+			System.out.println("set left1 to 0");
+		}
+    	if (leftMotorTwo.getOutputCurrent() > 20) {
+			leftMotorTwo.set(0);
+			System.out.println("set left2 to 0");
+		}
+    	*/
+    	
     	
     	
     }

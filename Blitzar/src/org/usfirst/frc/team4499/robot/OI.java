@@ -56,7 +56,9 @@ public class OI {
 	public static JoystickButton basinOut = new JoystickButton(joystickOne, 2); // B
 	public static JoystickButton basinIn = new JoystickButton(joystickOne, 3); // X
 	
-
+	//gear
+	public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // Select
+	public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // Start
 	
 	/////////
 	
@@ -67,9 +69,7 @@ public class OI {
 	
 	public static Joystick joystickTwo = new Joystick(1);
 	
-	//gear
-	public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // 
-	public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // 
+	
 	
 	// Flywheel 
 	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickTwo, 1); // A
@@ -90,6 +90,10 @@ public class OI {
 	// Vortex and Receiver
 	public static JoystickButton startFire = new JoystickButton(joystickTwo, 8);
 	public static JoystickButton stopFire = new JoystickButton(joystickTwo, 7);
+	
+	// Flywheel quick set
+	public static JoystickButton setZeroVelocity = new JoystickButton(joystickTwo, 9);
+	public static JoystickButton setShootVelocity = new JoystickButton(joystickTwo, 10);
 	////////
 	
 	// Dial/switch box

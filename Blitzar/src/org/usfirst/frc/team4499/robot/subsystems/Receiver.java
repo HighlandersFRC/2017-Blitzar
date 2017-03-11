@@ -28,7 +28,7 @@ public class Receiver extends Subsystem {
 	}
 	
 	public void setReceiverPower(float setPower) {
-		setReceiverPower x = new setReceiverPower(setPower);
+		SetReceiverPower x = new SetReceiverPower(setPower);
 		x.start();
 	}
 	

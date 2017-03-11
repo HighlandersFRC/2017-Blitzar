@@ -29,6 +29,9 @@ public class AutoFlywheelSpeed extends Command {
     	RobotMap.flywheelMaster.clearIAccum();
     	if (Tegra.x != -1) {
 		dist = Tegra.distance;
+		
+		//dist = ((2 * (Tegra.y * Tegra.y)) + (2 * Tegra.y) + 3000);
+		//TODO map tegra y to distance
 		flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
     	}
     }

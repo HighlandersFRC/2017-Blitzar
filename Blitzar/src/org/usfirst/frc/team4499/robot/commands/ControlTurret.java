@@ -26,6 +26,7 @@ public class ControlTurret extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	
     	if (OI.turretPanLeft.get()) {
     		setPower = (float) -0.2; // Left = negative
     		//System.out.println("Negative throttle");
@@ -35,10 +36,22 @@ public class ControlTurret extends Command {
 		} else {
 			setPower = 0;
 		}
+		
     	
+    	/*
+    	if (OI.joystickTwo.getPOV() == 90) {
+			setPower = (float) 0.2;
+		} else if (OI.joystickTwo.getPOV() == 270 || OI.joystickOne.getPOV() == 315 || OI.joystickOne.getPOV() == 225){
+			setPower = (float )-0.2;
+		} else {
+			setPower = 0;
+		}*/
+		
+    	/*
     	if (OI.turretPanLeft.get() && OI.turretPanRight.get()) {
     		setPower = 0;
     	}
+    	*/
     	
     	RobotMap.turretMotor.set(setPower);
     	

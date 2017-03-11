@@ -43,9 +43,10 @@ public class ShootHigh extends CommandGroup {
     	addSequential(new Wait(3));
     	*/
     	
-    	addParallel(new setFlywheelVelocity(0));
-    	addParallel(new setVortexPower(0));
-    	addParallel(new setReceiverPower(0));
+    	addParallel(new SetFlywheelVelocity(0));
+    	addParallel(new SetVortexPower(0));
+    	addParallel(new SetReceiverPower(0));
+    	addParallel(new SetAgitatorPower(0));
     	
     	addSequential(new DriveForward(75.5)); //7.25 inches past hopper is 78.5 inches from wall
     	addSequential(new Wait(0.5));
@@ -56,12 +57,13 @@ public class ShootHigh extends CommandGroup {
     	addSequential(new DriveForward(40), 2);
     	addSequential(new NavXDriveForward(0.2, 1));
     	
-    	addParallel(new setFlywheelVelocity(-4000));
+    	addParallel(new SetFlywheelVelocity(-4000));
     	//addParallel(new TrackTargetPID());
     	//addParallel(new AutoFlywheelSpeed());
     	addSequential(new Wait(1));
-    	addParallel(new setVortexPower(-1));
-    	addParallel(new setReceiverPower(-1));
+    	addParallel(new SetVortexPower(-1));
+    	addParallel(new SetReceiverPower(-1));
+    	addParallel(new SetAgitatorPower(1));
     
     }
 }

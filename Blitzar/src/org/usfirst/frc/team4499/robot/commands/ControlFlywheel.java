@@ -63,6 +63,8 @@ public class ControlFlywheel extends Command {
 				System.out.println("Setting flywheel power to 0 because it was greater than 0");
 			}
 			
+			
+			
 			RobotMap.flywheelMaster.set(flyWheelPower);
     	}
 		
@@ -92,7 +94,13 @@ public class ControlFlywheel extends Command {
    				System.out.println("Setting flywheel speed to 0 because it was above 0");
    			}
    			
-   			
+   			if (OI.setZeroVelocity.get() == true) {
+				flyWheelPower = 0;
+				System.out.println("zero flywheel velocity");
+			} else if (OI.setShootVelocity.get() == true) {
+				flyWheelPower = -3610;
+				System.out.println("flywheel to shoot speed");
+			}
    			
    			// flyWheelPower is currently in RPM
    	    	// Convert flyWheelPower so that the talon will run at the desired RPM
@@ -126,7 +134,8 @@ public class ControlFlywheel extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (!OI.flyWheelSpeedDecrease.get() && !OI.flyWheelSpeedIncrease.get());
+       // return (!OI.flyWheelSpeedDecrease.get() && !OI.flyWheelSpeedIncrease.get());
+    	return false;
     }
 
     // Called once after isFinished returns true

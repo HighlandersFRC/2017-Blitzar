@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4499.robot.commands.auto;
 
 import org.usfirst.frc.team4499.robot.commands.DriveForward;
+import org.usfirst.frc.team4499.robot.commands.*;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -26,6 +27,7 @@ public class DriveForwardAuto extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	addSequential(new DriveForward(80));
+    	//addSequential(new DriveForward(80));
+    	addSequential(new NavXDriveForward(0.35, 2));
     }
 }

@@ -30,8 +30,6 @@ public class RobotMap {
 	// blue 3 no encoder right
 	// green encoder right 1
 	
-	
-	
 	public static CANTalon flywheelMaster = new CANTalon(5);
 	public static CANTalon flywheelSlave = new CANTalon(6);
 	
@@ -47,8 +45,9 @@ public class RobotMap {
 	
 	//Compressor compressor = new Compressor(0);
 	//public static DoubleSolenoid basinPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
-	public static DoubleSolenoid gearPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
+	public static DoubleSolenoid basinPiston = new DoubleSolenoid(0, 0, 1); //Actually 2 pistons
 	public static DoubleSolenoid climbPiston = new DoubleSolenoid(0, 2, 3);
+	public static DoubleSolenoid gearPiston = new DoubleSolenoid(0, 4, 5);
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
 	// public static int rangefinderPort = 1;

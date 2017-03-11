@@ -40,9 +40,9 @@ public class DriveForward extends Command{
     
 	public DriveForward(double inches) {
         //TODO once PID is working change this to distance
-		if (rightEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+		if (rightEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent
-				&&  leftEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
+				&&  leftEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent) {
     	this.rotations = inches / (RobotStats.driveDiameter * Math.PI);
 		} else {
@@ -69,6 +69,10 @@ public class DriveForward extends Command{
     	RobotMap.rightMotorTwo.zeroEncoder();
     	RobotMap.leftMotorOne.zeroEncoder();
     	RobotMap.leftMotorTwo.zeroEncoder();
+    	RobotMap.rightMotorOne.setPosition(0);
+    	RobotMap.rightMotorTwo.setPosition(0);
+    	RobotMap.leftMotorOne.setPosition(0);
+    	RobotMap.leftMotorTwo.setPosition(0);
     	
     	startAngle = RobotMap.navx.getAngle();
     	
@@ -93,6 +97,9 @@ public class DriveForward extends Command{
     	rightWheel.updatePID(rightEncMotor.getEncPosition()/ticksPerRotation);
     	orientation.updatePID(RobotMap.navx.getAngle());
     	//rightWheel.updatePID(RobotMap.motorRightTwo.getEncPosition());
+    	
+    	System.out.println("setpoint " + rightWheel.getSetPoint());
+    	System.out.println("Right Enc Pos " + RobotMap.rightMotorOne.getPosition() + " Left Enc Pos " + RobotMap.leftMotorOne.getPosition());
     	
     	//System.out.println("Target" + rightWheel.getSetPoint() + "Wheel Position: " + (((double)RobotMap.motorRightTwo.getEncPosition())/7500.0));
     	//SmartDashboard.putNumber("Distance to Go",-(rightWheel.getSetPoint()-(((double)rightEncMotor.getEncPosition())/ticksPerRotation)));

@@ -33,7 +33,7 @@ public class Flywheel extends Subsystem {
 		if (RobotMap.flywheelMaster.isSensorPresent(FeedbackDevice.CtreMagEncoder_Absolute) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent){
 		RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.MotionMagic);
-		setFlywheelVelocityMP setFlywheelVelocityMP = new setFlywheelVelocityMP(desiredVelocity);
+		SetFlywheelVelocityMP setFlywheelVelocityMP = new SetFlywheelVelocityMP(desiredVelocity);
 		setFlywheelVelocityMP.start();
 		
 		} else {
@@ -47,7 +47,7 @@ public class Flywheel extends Subsystem {
 		RobotMap.flywheelMaster.changeControlMode(TalonControlMode.Speed);
 		double dist = Tegra.distance;
 		double flywheelSetSpeed = (0.0617485403 * (dist * dist) - (0.7296590798 * dist) + 3170.5521882763);
-		setFlywheelVelocity setVelocity = new setFlywheelVelocity(flywheelSetSpeed);
+		SetFlywheelVelocity setVelocity = new SetFlywheelVelocity(flywheelSetSpeed);
 		} else {
 			System.out.println("Flywheel encoder not detected!");
 		}

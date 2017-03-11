@@ -3,12 +3,14 @@ package org.usfirst.frc.team4499.robot.commands.auto;
 import org.usfirst.frc.team4499.robot.commands.AutoFlywheelSpeed;
 import org.usfirst.frc.team4499.robot.commands.DriveForward;
 import org.usfirst.frc.team4499.robot.commands.NavXDriveForward;
+import org.usfirst.frc.team4499.robot.commands.SetAgitatorPower;
 import org.usfirst.frc.team4499.robot.commands.TrackTargetPID;
 import org.usfirst.frc.team4499.robot.commands.Turn;
+import org.usfirst.frc.team4499.robot.commands.TurretMP;
 import org.usfirst.frc.team4499.robot.commands.Wait;
-import org.usfirst.frc.team4499.robot.commands.setFlywheelVelocity;
-import org.usfirst.frc.team4499.robot.commands.setReceiverPower;
-import org.usfirst.frc.team4499.robot.commands.setVortexPower;
+import org.usfirst.frc.team4499.robot.commands.SetFlywheelVelocity;
+import org.usfirst.frc.team4499.robot.commands.SetReceiverPower;
+import org.usfirst.frc.team4499.robot.commands.SetVortexPower;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -35,28 +37,62 @@ public class ShootHighBlueSide extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    	/*addParallel(new setFlywheelVelocity(-3400));
+    	// FIRE AT THE START
+    	addParallel(new SetVortexPower(0));
+    	addParallel(new SetReceiverPower(0));
+    	addParallel(new SetAgitatorPower(0));
+    	addParallel(new SetFlywheelVelocity(-3600)); //-3412
+    	//addParallel(new SetVortexPower(0));
+    	//addParallel(new SetReceiverPower(0));
+    	//addParallel(new SetAgitatorPower(0));
     	addSequential(new Wait(1));
-    	addParallel(new setVortexPower(-1));
-    	addParallel(new setReceiverPower(-1));
-    	addSequential(new Wait(3));*/
+    	addParallel(new SetVortexPower(-1));
+    	addParallel(new SetReceiverPower(1));
+    	addParallel(new SetAgitatorPower(1));
+    	addSequential(new Wait(3));
+    	addParallel(new SetVortexPower(1));
+    	addParallel(new SetReceiverPower(-1));
+    	addParallel(new SetAgitatorPower(-1));
+    	addSequential(new Wait(0.8));
+    	addParallel(new SetVortexPower(-1));
+    	addParallel(new SetReceiverPower(1));
+    	addParallel(new SetAgitatorPower(1));
+    	addSequential(new Wait(1.6));
+    	addParallel(new SetVortexPower(0));
+    	addParallel(new SetReceiverPower(0));
+    	addParallel(new SetAgitatorPower(0));
+    	addParallel(new SetFlywheelVelocity(0));
+    	addSequential(new NavXDriveForward(-0.5, 2.5));
     	
-    	addParallel(new setFlywheelVelocity(0));
-    	addParallel(new setVortexPower(0));
-    	addParallel(new setReceiverPower(0));
+    	/*
+    	//addParallel(new setFlywheelVelocity(-3400));
+    	//addSequential(new Wait(1));
+    	//addParallel(new setVortexPower(-1));
+    	//addParallel(new setReceiverPower(-1));
+    	//addSequential(new Wait(3));
     	
-    	addSequential(new DriveForward(85));
+    	addParallel(new SetFlywheelVelocity(0));
+    	addParallel(new SetVortexPower(0));
+    	addParallel(new SetReceiverPower(0));
+    	addParallel(new SetAgitatorPower(0));
+    	
+    	addSequential(new DriveForward(75.5)); //7.25 inches past hopper is 78.5 inches from wall
     	addSequential(new Wait(0.5));
-    	addSequential(new Turn(90, false));
+    	addSequential(new Turn(-90, true));
     	addSequential(new Wait(0.5));
-    	addSequential(new NavXDriveForward(-0.4, 2));
+    	
+    	addSequential(new DriveForward(40), 2);
+    	addSequential(new NavXDriveForward(0.2, 1));
+    	addParallel(new TurretMP(2.5));
     	
     	//addParallel(new setFlywheelVelocity(-4000));
     	addParallel(new TrackTargetPID());
     	addParallel(new AutoFlywheelSpeed());
-    	addSequential(new Wait(1));
-    	addParallel(new setVortexPower(-1));
-    	addParallel(new setReceiverPower(-1));
     	
+    	addSequential(new Wait(1));
+    	addParallel(new SetVortexPower(-1));
+    	addParallel(new SetReceiverPower(-1));
+    	addParallel(new SetAgitatorPower(1));
+    	*/
     }
 }
