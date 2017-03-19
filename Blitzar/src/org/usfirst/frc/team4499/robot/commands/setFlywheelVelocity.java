@@ -26,7 +26,7 @@ public class SetFlywheelVelocity extends Command {
     protected void initialize() {
     	RobotMap.flywheelMaster.changeControlMode(CANTalon.TalonControlMode.Speed);
     //	RobotMap.flywheelMaster.set(setVelocity);
-    	RobotMap.flywheelMaster.set(setVelocity);
+    	//RobotMap.flywheelMaster.set(setVelocity);
     }
 
     // Called repeatedly when this Command is scheduled to run

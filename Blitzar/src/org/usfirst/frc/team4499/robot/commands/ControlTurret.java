@@ -28,10 +28,10 @@ public class ControlTurret extends Command {
     protected void execute() {
     	
     	if (OI.turretPanLeft.get()) {
-    		setPower = (float) -0.2; // Left = negative
+    		setPower = (float) -0.3; // Left = negative
     		//System.out.println("Negative throttle");
 		} else if (OI.turretPanRight.get()) {
-			setPower = (float) +0.2; // Right = positive 
+			setPower = (float) +0.3; // Right = positive 
 			//System.out.println("Positive throttle");
 		} else {
 			setPower = 0;

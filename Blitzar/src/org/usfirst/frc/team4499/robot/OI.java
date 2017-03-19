@@ -53,12 +53,17 @@ public class OI {
 	public static JoystickButton climbPistonIn = new JoystickButton(joystickOne, 5); // Left bumper
 	
 	// Basin
-	public static JoystickButton basinOut = new JoystickButton(joystickOne, 2); // B
-	public static JoystickButton basinIn = new JoystickButton(joystickOne, 3); // X
+	//public static JoystickButton basinOut = new JoystickButton(joystickOne, 2); // B
+	//public static JoystickButton basinIn = new JoystickButton(joystickOne, 3); // X
+	public static JoystickButton basinOut = new JoystickButton(joystickOne, 7); // Select
+	public static JoystickButton basinIn = new JoystickButton(joystickOne, 8); // Start
+	
 	
 	//gear
-	public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // Select
-	public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // Start
+	//public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // Select
+	//public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // Start
+	//gear rotate up on dpad
+	//gear rotate down on dpad
 	
 	/////////
 	

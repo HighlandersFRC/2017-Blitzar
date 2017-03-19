@@ -45,13 +45,16 @@ public class Robot extends IterativeRobot {
 	// Variable Declarations
 	
 	
+	// Initialize subsystems
+	public static Flywheel flywheel = new Flywheel();
+	public static Receiver receiver = new Receiver();
+	public static Vortex vortex = new Vortex();
+	public static DriveTrain driveTrain = new DriveTrain();
+	public static Turret turret = new Turret();
+	public static Agitator agitator = new Agitator();
+	public static GearIntake gearIntake = new GearIntake();
 	
-	public static Flywheel flywheel = new Flywheel(); // Construct a flywheel subsystem object
-	public static Receiver receiver = new Receiver(); // Construct a receiver subsystem object
-	public static Vortex vortex = new Vortex(); // Construct a vortex subsystem object
-	public static DriveTrain driveTrain = new DriveTrain(); // Construct a drive train subsystem object
-	public static Turret turret = new Turret(); // Construct a new turret subsystem object
-	public static Agitator agitator = new Agitator(); // Construct a new agitator subsystem object
+	
 	
 	public static Turn turn = new Turn(90, false);
 	public static ShootHigh shootHighAuto = new ShootHigh();
@@ -63,7 +66,12 @@ public class Robot extends IterativeRobot {
 	public static SetReceiverPower stopReceiver = new SetReceiverPower(0);
 	public static SetAgitatorPower stopAgitator = new SetAgitatorPower(0);
 	public static SetDriveTrainCurrent setDriveTrainCurrent = new SetDriveTrainCurrent(10);
+	public static ControlGearIntake controlGearIntake = new ControlGearIntake();
 	
+	public static float flywheelMasterPTerm;
+	public static float flywheelMasterITerm;
+	public static float flywheelMasterDTerm;
+	public static float flywheelMasterIZone;
 	
 	public static float flyWheelPower = 0;
 	public static float receiverPower = 0;
@@ -186,7 +194,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		//SmartDashboard.putNumber("Flywheel velocity", RobotMap.flywheelMaster.getSpeed());
-		System.out.println(RobotMap.flywheelMaster.getSpeed());
+		//System.out.println(RobotMap.flywheelMaster.getSpeed());
 		//SmartDashboard.putNumber("NavX Yaw in auto " , RobotMap.navx.getYaw());
 		Scheduler.getInstance().run();
 	}
@@ -212,16 +220,17 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheelMaster.setP(0.07);
-		RobotMap.flywheelMaster.setI(0.00022); //0.00022
-		RobotMap.flywheelMaster.setD(0.9); // 1.3
+		RobotMap.flywheelMaster.setP(0.1); //0,07 for comp
+		RobotMap.flywheelMaster.setI(0.0008); //0.00022 for comp
+		RobotMap.flywheelMaster.setD(1.5); // 0.9 for comp
+		RobotMap.flywheelMaster.setIZone(300);
 		
 		RobotMap.navx.zeroYaw();
 		
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
 		//RobotMap.flywheel.setF(0.078);
-		RobotMap.flywheelMaster.setF(0.02141); //0.03122 0.015
+		RobotMap.flywheelMaster.setF(0.0235); //0.03122 0.015 COMP BOT
 		
 		RobotMap.rightMotorOne.setInverted(false);
 		RobotMap.rightMotorTwo.setInverted(false);
@@ -264,8 +273,8 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.turretMotor.setEncPosition(0);
-		RobotMap.turretMotor.setForwardSoftLimit(2.9);
-		RobotMap.turretMotor.setReverseSoftLimit(-1.4);
+		RobotMap.turretMotor.setForwardSoftLimit(3.3);
+		RobotMap.turretMotor.setReverseSoftLimit(-3.0);
 		RobotMap.turretMotor.enableForwardSoftLimit(true);
 		RobotMap.turretMotor.enableReverseSoftLimit(true);
 		RobotMap.turretMotor.set(0);
@@ -276,6 +285,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.agitatorMotor.changeControlMode(TalonControlMode.PercentVbus);
 		
 		driveTrain.controlDriveTrain();
+		//controlGearIntake.start();
 		
 		//setDriveTrainCurrent.start();
 		// Set flywheel for testing purposes
@@ -296,7 +306,7 @@ public class Robot extends IterativeRobot {
 		//driveStraight.start();
 		
 		// Turret track
-		//trackTarget.start();
+		trackTarget.start();
 		
 		// Auto flywheel speed set
 		//autoFlywheelSpeed.start();
@@ -319,7 +329,7 @@ public class Robot extends IterativeRobot {
 			flywheel.controlFlywheelVelocity();
 			//flywheel.controlFlywheelPercentVBus();
 		}
-		
+		//System.out.println(RobotMap.turretMotor.getPosition());
 		/*
 		// Control receiver
 		if (oi.receiverSpeedIncrease.get() || oi.receiverSpeedDecrease.get()) {
@@ -388,6 +398,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		// gear
+		/*
 		if (oi.gearOut.get()) {
 			RobotMap.gearPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
 			gearPistonOut = true;
@@ -397,7 +408,7 @@ public class Robot extends IterativeRobot {
 			RobotMap.gearPiston.set(DoubleSolenoid.Value.kForward); // Both pistons
 			gearPistonOut = false;
 			}
-		
+		*/
 		// climber
 		
 		if (oi.climbPistonOut.get()) {
@@ -539,8 +550,9 @@ public class Robot extends IterativeRobot {
 		
 		// Encoder sees 50 rotations, wheel turns 22 times
 		
+	//	System.out.println("Left trigger: " + OI.joystickOne.getRawAxis(2) + " Right trigger: " + OI.joystickOne.getRawAxis(3));
 		
-		System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
 		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
 		Scheduler.getInstance().run();

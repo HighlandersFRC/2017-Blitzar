@@ -14,10 +14,13 @@ import com.ctre.CANTalon.TalonControlMode;
  */
 public class ControlDriveTrain extends Command {
 
+	private static final int CURRENT_LIMIT = 30;
+	private static final int MAX_CURRENT_OFF_COUNT = 3;
 	private CANTalon rightMotorOne;
 	private CANTalon rightMotorTwo;
 	private CANTalon leftMotorOne;
 	private CANTalon leftMotorTwo;
+	private int currentOffCount;
 	
     public ControlDriveTrain(CANTalon l1, CANTalon l2, CANTalon r1, CANTalon r2) {
         // Use requires() here to declare subsystem dependencies
@@ -44,83 +47,64 @@ public class ControlDriveTrain extends Command {
     protected void execute() {
     
     	if (OI.climbPistonOut.get()){
-    	if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
-    		if (leftMotorOne.getOutputCurrent() > 10) {
-    			leftMotorOne.set(0);
-    		} else {
-    		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
-    		}
-    		if (leftMotorTwo.getOutputCurrent() > 10) {
-    			leftMotorTwo.set(0);
-    		} else {
-    		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
-    		}
-    	} else {
-    		leftMotorOne.set(0); 
-    		leftMotorTwo.set(0);
-    	}
+    		//System.out.println("Brownout protection enabled");
     		
-    	if (Math.abs(OI.joystickOne.getRawAxis(5)) > 0.2) {
-    		if (rightMotorOne.getOutputCurrent() > 10) {
-    			rightMotorOne.set(0);
-    		} else {
-    		rightMotorOne.set(-OI.joystickOne.getRawAxis(5));
-    		}
-    		
-    		if (rightMotorTwo.getOutputCurrent() > 10) {
-    			rightMotorTwo.set(0);
-    		} else {
-    		rightMotorTwo.set(-OI.joystickOne.getRawAxis(5));
-    		}
-    		
-    	} else {
-    		rightMotorOne.set(0); 
-    		rightMotorTwo.set(0);
-    	}
+    	checkCurrent(leftMotorOne, OI.joystickOne.getRawAxis(1));
+    	checkCurrent(leftMotorTwo, OI.joystickOne.getRawAxis(1));
+    	checkCurrent(rightMotorOne, -OI.joystickOne.getRawAxis(5));
+    	checkCurrent(rightMotorTwo, -OI.joystickOne.getRawAxis(5));
     	
     	} else {
-    	if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
-    		
-    		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
-    		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
-    		
-    	} else {
-    		leftMotorOne.set(0); 
-    		leftMotorTwo.set(0);
+    		//System.out.println("Brownout protection disabled");
+    	setMotorsNoCurrentProtection();
     	}
     		
-    	if (Math.abs(OI.joystickOne.getRawAxis(5)) > 0.2) {
-    		rightMotorOne.set(-OI.joystickOne.getRawAxis(5));
-    		rightMotorTwo.set(-OI.joystickOne.getRawAxis(5));
-    		
-    		
-    	} else {
-    		rightMotorOne.set(0); 
-    		rightMotorTwo.set(0);
-    	}
-    	}
-    	
-    	/*if (rightMotorOne.getOutputCurrent() > 20) {
-			rightMotorOne.set(0);
-			System.out.println("set right1 to 0");
-		}
-    	if (rightMotorTwo.getOutputCurrent() > 20) {
-			rightMotorTwo.set(0);
-			System.out.println("set right2 to 0");
-		}
-    	if (leftMotorOne.getOutputCurrent() > 20) {
-			leftMotorOne.set(0);
-			System.out.println("set left1 to 0");
-		}
-    	if (leftMotorTwo.getOutputCurrent() > 20) {
-			leftMotorTwo.set(0);
-			System.out.println("set left2 to 0");
-		}
-    	*/
-    	
-    	
-    	
     }
+
+	private void setMotorsNoCurrentProtection() {
+		if (Math.abs(OI.joystickOne.getRawAxis(1)) > 0.2) {
+    		
+    		leftMotorOne.set(OI.joystickOne.getRawAxis(1)); // Up on joystick returns lower
+    		leftMotorTwo.set(OI.joystickOne.getRawAxis(1)); // Negative -> Correct direction
+    		
+    	} else {
+    		leftMotorOne.set(0); 
+    		leftMotorTwo.set(0);
+    	}
+    		
+    	if (Math.abs(OI.joystickOne.getRawAxis(5)) > 0.2) {
+    		rightMotorOne.set(-OI.joystickOne.getRawAxis(5));
+    		rightMotorTwo.set(-OI.joystickOne.getRawAxis(5));
+    		
+    	} else {
+    		rightMotorOne.set(0); 
+    		rightMotorTwo.set(0);
+    	}
+	}
+    
+	private void checkCurrent(CANTalon driveMotor, double setPower) {
+		if (Math.abs(setPower) < 0.2) {
+			setPower = 0;
+		} else {
+			if (currentOffCount > MAX_CURRENT_OFF_COUNT) {
+				currentOffCount = 0;
+			}
+			if (shouldTurnMotorOff(driveMotor)) {
+				driveMotor.set(0);
+				currentOffCount++;
+			} else {
+				driveMotor.set(setPower);
+				currentOffCount = 0;
+			}
+		}
+	}
+
+	private boolean shouldTurnMotorOff(CANTalon driveMotor) {
+		return driveMotor.getOutputCurrent() > CURRENT_LIMIT || currentOffCount < MAX_CURRENT_OFF_COUNT;
+	}
+
+    
+    
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {

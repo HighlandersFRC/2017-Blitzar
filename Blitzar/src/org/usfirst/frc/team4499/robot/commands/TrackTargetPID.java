@@ -24,8 +24,8 @@ public class TrackTargetPID extends Command {
         // eg. requires(chassis);
     	
     	
-    	orientation.setMaxOutput(.5);
-		orientation.setMinOutput(-.5);
+    	orientation.setMaxOutput(.4);
+		orientation.setMinOutput(-.4);
     	
     }
 
@@ -42,16 +42,14 @@ public class TrackTargetPID extends Command {
     	//if (Tegra.x && lastX)
     	currentX = Tegra.x;
     	orientation.updatePID(currentX);
-    	
+    	System.out.println("Updated to " + currentX);
     	if (currentX == -1) {
     		RobotMap.turretMotor.set(0);
     	} else {
     	RobotMap.turretMotor.set(-orientation.getResult());
     	}
     	
-    	if (RobotMap.turretMotor.getEncPosition() > -1.4 && RobotMap.turretMotor.getEncPosition()< 2.9 ) {
-    		
-    	
+    	if (RobotMap.turretMotor.getEncPosition() > -3.1 && RobotMap.turretMotor.getEncPosition() < 3.4 ) {
     	
     	System.out.println("Angle " + RobotMap.turretMotor.getPosition());
     	System.out.println("SetPoint " + 160 + " Error " + (160 - currentX));

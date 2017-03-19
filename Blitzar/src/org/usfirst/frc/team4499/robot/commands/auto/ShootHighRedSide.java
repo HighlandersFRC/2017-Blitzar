@@ -43,28 +43,28 @@ public class ShootHighRedSide extends CommandGroup {
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
-    	addParallel(new SetFlywheelVelocity(-3412)); //-3412
+    	addParallel(new SetFlywheelVelocity(-3652)); //-3412
     	//addParallel(new SetVortexPower(0));
     	//addParallel(new SetReceiverPower(0));
     	//addParallel(new SetAgitatorPower(0));
+    	addSequential(new Wait(2));
+    	addParallel(new SetVortexPower(-1));
+    	addParallel(new SetReceiverPower(1));
+    	addParallel(new SetAgitatorPower(1));
+    	addSequential(new Wait(5));
+    	addParallel(new SetVortexPower(1));
+    	addParallel(new SetReceiverPower(-1));
+    	addParallel(new SetAgitatorPower(-1));
     	addSequential(new Wait(1));
     	addParallel(new SetVortexPower(-1));
     	addParallel(new SetReceiverPower(1));
     	addParallel(new SetAgitatorPower(1));
-    	addSequential(new Wait(3));
-    	addParallel(new SetVortexPower(1));
-    	addParallel(new SetReceiverPower(-1));
-    	addParallel(new SetAgitatorPower(-1));
-    	addSequential(new Wait(0.8));
-    	addParallel(new SetVortexPower(-1));
-    	addParallel(new SetReceiverPower(1));
-    	addParallel(new SetAgitatorPower(1));
-    	addSequential(new Wait(1.6));
+    	addSequential(new Wait(2));
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
     	addParallel(new SetFlywheelVelocity(0));
-    	addSequential(new NavXDriveForward(0.5, 2));
+    	addSequential(new NavXDriveForward(0.5, 1.5));
     	
     	/*
     	//addParallel(new SetFlywheelVelocity(-3412));
