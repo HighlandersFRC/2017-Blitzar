@@ -14,18 +14,19 @@ public class TrackTargetPID extends Command {
 	
 	private float lastX = -1;
 	private float currentX;
-	private double kP = 0.0035;
-	private double kI = 0.00012;
-	private double kD = 0;
-	PID orientation = new PID(kP,kI,kD);
+	private double kP = 0.0013;
+	private double kI = 0.00001;
+	private double kD = 0.00015;
+	private double kIZone = 200;
+	PID orientation = new PID(kP,kI,kD, kIZone);
 	
     public TrackTargetPID() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	
     	
-    	orientation.setMaxOutput(.4);
-		orientation.setMinOutput(-.4);
+    	orientation.setMaxOutput(.35);
+		orientation.setMinOutput(-.35);
     	
     }
 
@@ -46,7 +47,11 @@ public class TrackTargetPID extends Command {
     	if (currentX == -1) {
     		RobotMap.turretMotor.set(0);
     	} else {
-    	RobotMap.turretMotor.set(-orientation.getResult());
+    		if (Tegra.theta < 0) {
+    			RobotMap.turretMotor.set(-orientation.getResult() - 0.11);
+    		} else if (Tegra.theta > 0) {
+    			RobotMap.turretMotor.set(-orientation.getResult() + 0.11);
+    		}
     	}
     	
     	if (RobotMap.turretMotor.getEncPosition() > -3.1 && RobotMap.turretMotor.getEncPosition() < 3.4 ) {
@@ -66,6 +71,7 @@ public class TrackTargetPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("TRACKING JUST ENDED");
     }
 
     // Called when another command which requires one or more of the same

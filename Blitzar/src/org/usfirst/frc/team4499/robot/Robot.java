@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 	public static SetReceiverPower stopReceiver = new SetReceiverPower(0);
 	public static SetAgitatorPower stopAgitator = new SetAgitatorPower(0);
 	public static SetDriveTrainCurrent setDriveTrainCurrent = new SetDriveTrainCurrent(10);
-	public static ControlGearIntake controlGearIntake = new ControlGearIntake();
+	public static ControlGearIntake controlGearIntake = new ControlGearIntake(true);
 	
 	public static float flywheelMasterPTerm;
 	public static float flywheelMasterITerm;
@@ -268,6 +268,10 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.receiverRight.set(0);
 		
+		RobotMap.gearIntakeRotate.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.gearIntakeRotate.setPosition(0);
+	
+		
 		RobotMap.climbMotorOne.set(0);
 		RobotMap.climbMotorTwo.set(0);
 		
@@ -285,7 +289,15 @@ public class Robot extends IterativeRobot {
 		RobotMap.agitatorMotor.changeControlMode(TalonControlMode.PercentVbus);
 		
 		driveTrain.controlDriveTrain();
-		//controlGearIntake.start();
+		controlGearIntake.start();
+	//	if(OI.gearRoller.get())
+	//	{
+	//		RobotMap.gearIntakeRoller.set(-0.8); 
+	//	}
+	//	else
+	//	{
+	//		RobotMap.gearIntakeRoller.set(0);
+	//	}
 		
 		//setDriveTrainCurrent.start();
 		// Set flywheel for testing purposes
@@ -306,7 +318,7 @@ public class Robot extends IterativeRobot {
 		//driveStraight.start();
 		
 		// Turret track
-		trackTarget.start();
+	//	trackTarget.start();
 		
 		// Auto flywheel speed set
 		//autoFlywheelSpeed.start();
@@ -323,7 +335,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
+		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition() + "roller pos " + RobotMap.gearIntakeRoller.getPosition());
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			flywheel.controlFlywheelVelocity();

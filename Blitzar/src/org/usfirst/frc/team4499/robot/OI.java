@@ -89,7 +89,8 @@ public class OI {
 	public static JoystickButton turretPanLeft = new JoystickButton(joystickTwo, 5); // Left bumper
 	
 	// Vortex
-	public static JoystickButton vortexSpeedDecrease = new JoystickButton(joystickTwo, 3); // X
+//	public static JoystickButton vortexSpeedDecrease = new JoystickButton(joystickTwo, 3); // X
+	public static JoystickButton gearRoller= new JoystickButton(joystickTwo,3);
 	public static JoystickButton vortexSpeedIncrease = new JoystickButton(joystickTwo, 2); // B
 	
 	// Vortex and Receiver
@@ -111,6 +112,8 @@ public class OI {
 	public static JoystickButton switchOne = new JoystickButton(dial, 6);
 	public static JoystickButton switchTwo = new JoystickButton(dial, 7);
 	public static JoystickButton switchThree = new JoystickButton(dial, 8);
+	// GearIntake 
+
 	
 	
 }

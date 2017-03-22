@@ -10,6 +10,7 @@ public class Turn extends Command {
 	private double kI = 0.0004; //0.0002
  	private double kP = 0.02; //0.02
 	private double kD = 0.05; //0.05
+	private double kIZone = Double.MAX_VALUE;
 	private double target = 0;
 	private int whichWay = 0;
 	private boolean absolute;
@@ -22,7 +23,7 @@ public class Turn extends Command {
 	
 	double startingAngle;
 	Preferences prefs;
-	PID orientation = new PID(kP,kI,kD);
+	PID orientation = new PID(kP,kI,kD, kIZone);
 	public Turn (double degrees, boolean absolute){
 		
 		orientation.setMaxOutput(0.5);

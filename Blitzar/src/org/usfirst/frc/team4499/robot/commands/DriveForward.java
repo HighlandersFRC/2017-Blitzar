@@ -20,6 +20,7 @@ public class DriveForward extends Command{
 	private double kI = 0.001;
 	private double kP = .13;
 	private double kD = 1;
+	private double kIZone = Double.MAX_VALUE;
 	
 	//private double ticksPerRotation = 4320 * 3;
 	private double ticksPerRotation = 4096 / 0.3846153846153846; //Gearing ratio is 13:5  5/13 = 0.38461538
@@ -29,9 +30,9 @@ public class DriveForward extends Command{
 	private double average;
 	private boolean instantlyFinish = false;
 	double rotations; // distance to travel
-	PID rightWheel = new PID(kP,kI,kD); // PID's for both motors
-	PID leftWheel = new PID(kP,kI,kD);
-	PID orientation = new PID(0.025, 0.0001, 0);
+	PID rightWheel = new PID(kP,kI,kD, kIZone); // PID's for both motors
+	PID leftWheel = new PID(kP,kI,kD, kIZone);
+	PID orientation = new PID(0.025, 0.0001, 0, kIZone);
 	DCMotor rightEncMotor = RobotMap.rightMotorOne;
 	DCMotor leftEncMotor = RobotMap.leftMotorOne;
 	
@@ -83,7 +84,7 @@ public class DriveForward extends Command{
     	//RobotMap.leftMotorTwo.changeControlMode(TalonControlMode.Follower);
     	rightEncMotor.setPID(kI, kP, kD);
     	leftEncMotor.setPID(kP, kI, kD);
-    	orientation.setPID(0.025, 0.0001, 0.2);
+    	orientation.setPID(0.025, 0.0001, 0.2, kIZone);
     	System.out.println("Rotations " + rotations);
     }
 

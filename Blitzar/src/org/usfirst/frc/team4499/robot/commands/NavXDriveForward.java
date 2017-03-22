@@ -16,13 +16,14 @@ public class NavXDriveForward extends Command {
 	private double kp = 0.025;
 	private double ki = 0.0001;
 	private double kd = 0;
+	private double kIZone = Double.MAX_VALUE;
 	private PID orientation; 
 	private double startTime;
 	private boolean across = false;
     public NavXDriveForward(double speed, double time) {
     	this.time = time;
     	this.speed = speed;
-    	orientation = new PID(kp,ki,kd);
+    	orientation = new PID(kp,ki,kd, kIZone);
     	//orientation.setMaxOutput(.25);
     	//orientation.setMinOutput(-.25);
     	orientation.setContinuous(true);

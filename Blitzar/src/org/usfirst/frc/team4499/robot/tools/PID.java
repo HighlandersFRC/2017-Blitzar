@@ -9,6 +9,7 @@ public class PID {
 	private double PValue;
 	private double IValue;
 	private double DValue;
+	private double IZone;
 
 	// Dictates the inputs and outputs
 	private double maxInput;
@@ -21,10 +22,11 @@ public class PID {
 	private double output;
 	private double result;
 	
-	public PID(double kp, double ki, double kd){
+	public PID(double kp, double ki, double kd, double iZone){
 		PValue = kp;
 		IValue = ki;
 		DValue = kd;
+		IZone = iZone;
 	}
 	
 	public double updatePID(double value){
@@ -41,7 +43,10 @@ public class PID {
         }
 		
         if ((error * PValue < maxOutput) && (error * PValue > minOutput)) {
-            totalError += error;
+        	if (Math.abs(error) < IZone) {
+        		System.out.println("IN I ZONE");
+        		totalError += error;
+        	}
         } else {
             totalError = 0;
         }
@@ -52,10 +57,11 @@ public class PID {
         return result;
 	}
 	
-	public void setPID(double p, double i , double d){
+	public void setPID(double p, double i , double d, double iZone){
 		PValue = p;
 		IValue = i;
 		DValue = d;
+		IZone = iZone;
 	}
 	
 	public double getResult(){
