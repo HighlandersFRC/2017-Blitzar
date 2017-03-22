@@ -11,5 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="C:/Users/NewUser/wpilib/user/java/lib/navx_frc.jar"/>
 	<classpathentry exported="true" kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/NewUser/wpilib/user/java/lib/json.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/json.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
