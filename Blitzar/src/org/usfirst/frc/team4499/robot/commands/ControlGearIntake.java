@@ -22,7 +22,6 @@ public class ControlGearIntake extends Command {
 	private double targetPosition = forwardSoftLimit;
 	private boolean positionMode = false;
 	private boolean hasGear = false;
-	HoldGear hold = new HoldGear();
 	
     public ControlGearIntake(boolean positionMode) {
         // Use requires() here to declare subsystem dependencies
