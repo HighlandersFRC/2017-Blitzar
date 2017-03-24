@@ -8,6 +8,7 @@ import org.usfirst.frc.team4499.robot.commands.TrackTargetPID;
 import org.usfirst.frc.team4499.robot.commands.Turn;
 import org.usfirst.frc.team4499.robot.commands.Wait;
 import org.usfirst.frc.team4499.robot.commands.SetFlywheelVelocity;
+import org.usfirst.frc.team4499.robot.commands.SetGearIntake;
 import org.usfirst.frc.team4499.robot.commands.SetReceiverPower;
 import org.usfirst.frc.team4499.robot.commands.SetVortexPower;
 
@@ -36,9 +37,10 @@ public class ShootHighRedSide extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
+    	
+    	addParallel(new SetGearIntake(-0.6, -0.12));
     	// FIRE AT THE START
     	//addSequential(new SetFlywheelVelocity(-3100));
-    	
     	
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));

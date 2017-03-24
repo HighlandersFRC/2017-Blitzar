@@ -82,6 +82,8 @@ public class Robot extends IterativeRobot {
 	public static boolean gearPistonOut = false;
 	public static boolean basinPistonOut = false;
 	public static float tempMaxCurrent = 0;
+	public static int fireCount = 0;
+	public static boolean fireEnabled;
 	
 	double startTime;
 	double previousVelocity;
@@ -99,6 +101,9 @@ public class Robot extends IterativeRobot {
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 	//	chooser.addObject("My Auto", new MyAutoCommand());
 		//SmartDashboard.putData("Auto mode", chooser);
+		
+		RobotMap.gearIntakeRotate.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.gearIntakeRotate.setPosition(0);
 		
 		RobotMap.navx.zeroYaw();
 		
@@ -237,6 +242,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.leftMotorOne.setInverted(false);
 		RobotMap.leftMotorTwo.setInverted(false);
 		
+		RobotMap.rightMotorTwo.reverseSensor(true);
+		RobotMap.leftMotorOne.reverseSensor(false);
+		
 		RobotMap.rightMotorOne.setCurrentLimit(10);
 		RobotMap.rightMotorTwo.setCurrentLimit(10);
 		RobotMap.leftMotorOne.setCurrentLimit(10);
@@ -246,7 +254,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.leftMotorOne.setVoltageRampRate(9999);
 		RobotMap.leftMotorTwo.setVoltageRampRate(9999);
 		
-		RobotMap.rightMotorOne.reverseSensor(false);
+
 		
 		RobotMap.rightMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.leftMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -268,8 +276,7 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.receiverRight.set(0);
 		
-		RobotMap.gearIntakeRotate.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.gearIntakeRotate.setPosition(0);
+		
 	
 		
 		RobotMap.climbMotorOne.set(0);
@@ -335,6 +342,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	System.out.println("fire count " + fireCount);
 		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition() + "roller pos " + RobotMap.gearIntakeRoller.getPosition());
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
@@ -366,7 +374,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.agitatorMotor.set(vortexPower);
 		*/
 		
-		if (oi.vortexSpeedIncrease.get()) {
+		if (oi.unJamShooter.get()) {
+			fireEnabled = false;
+			fireCount = 0;
 			vortex.setVortexPower(1);
 			receiver.setReceiverPower(-1);
 			RobotMap.agitatorMotor.set(-1);
@@ -374,12 +384,30 @@ public class Robot extends IterativeRobot {
 		
 		// Vortex and receiver
 		if (OI.startFire.get()) {
+			fireEnabled = true;
+		}
+		
+		if (fireEnabled) {
+			if (fireCount > 20 && fireCount <= 40) {
+				// Run reverse
+				vortex.setVortexPower(-1);
+				receiver.setReceiverPower(1);
+				RobotMap.agitatorMotor.set(-1);
+			} else {
+			// Run forward
 			vortex.setVortexPower(-1);
 			receiver.setReceiverPower(1);
 			RobotMap.agitatorMotor.set(1);
+			}
+			fireCount++;
+			if (fireCount % 40 == 0) {
+				fireCount = 0;
+			}
 		}
 		
 		if (oi.stopFire.get()) {
+			fireEnabled = false;
+			fireCount = 0;
 			vortex.setVortexPower(0);
 			receiver.setReceiverPower(0);
 			RobotMap.agitatorMotor.set(0);
@@ -522,6 +550,7 @@ public class Robot extends IterativeRobot {
 		//System.out.println(RobotMap.navx.getYaw());
 		//System.out.println("current: " + RobotMap.rightMotorOne.getOutputCurrent() + " voltage: " + RobotMap.rightMotorOne.getOutputVoltage() + " max " + tempMaxCurrent);
 		
+		/*
 		if (RobotMap.rightMotorOne.getOutputCurrent() > tempMaxCurrent) {
 			tempMaxCurrent = (float) RobotMap.rightMotorOne.getOutputCurrent();
 			if (RobotMap.rightMotorTwo.getOutputCurrent() > tempMaxCurrent) {
@@ -534,8 +563,8 @@ public class Robot extends IterativeRobot {
 				}
 			}
 		}
-		
-		SmartDashboard.putNumber("rightMotorOne Current", RobotMap.rightMotorOne.getOutputCurrent());
+		*/
+		//SmartDashboard.putNumber("rightMotorOne Current", RobotMap.rightMotorOne.getOutputCurrent());
 		
 		//SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
 		SmartDashboard.putNumber("NavX Yaw" , RobotMap.navx.getYaw());
@@ -564,9 +593,10 @@ public class Robot extends IterativeRobot {
 		
 	//	System.out.println("Left trigger: " + OI.joystickOne.getRawAxis(2) + " Right trigger: " + OI.joystickOne.getRawAxis(3));
 		
-		//System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("Right Pos " + RobotMap.rightMotorTwo.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
 		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("gear intake current draw " + RobotMap.gearIntakeRotate.getOutputCurrent());
 		Scheduler.getInstance().run();
 	}
 

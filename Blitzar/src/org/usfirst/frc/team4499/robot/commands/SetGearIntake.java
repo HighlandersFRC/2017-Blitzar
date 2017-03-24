@@ -16,7 +16,7 @@ public class SetGearIntake extends Command {
 
 	private double rotateSetPower;
 	private double rollerSetPower;
-	private double forwardSoftLimit = -0.03;
+	private double forwardSoftLimit = 0;
 	private double reverseSoftLimit = -0.6;
 	private double targetPosition = forwardSoftLimit;
 	private double targetRollerPower;

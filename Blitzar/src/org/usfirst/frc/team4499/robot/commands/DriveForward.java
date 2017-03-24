@@ -17,9 +17,9 @@ import com.ctre.CANTalon.TalonControlMode;
 public class DriveForward extends Command{
 	// PID Values for this motor
 	
-	private double kI = 0.001;
-	private double kP = .13;
-	private double kD = 1;
+	private double kI = 0.0001;
+	private double kP = .07;
+	private double kD = 0.7;
 	private double kIZone = Double.MAX_VALUE;
 	
 	//private double ticksPerRotation = 4320 * 3;
@@ -33,7 +33,7 @@ public class DriveForward extends Command{
 	PID rightWheel = new PID(kP,kI,kD, kIZone); // PID's for both motors
 	PID leftWheel = new PID(kP,kI,kD, kIZone);
 	PID orientation = new PID(0.025, 0.0001, 0, kIZone);
-	DCMotor rightEncMotor = RobotMap.rightMotorOne;
+	DCMotor rightEncMotor = RobotMap.rightMotorTwo;
 	DCMotor leftEncMotor = RobotMap.leftMotorOne;
 	
 	
@@ -41,6 +41,9 @@ public class DriveForward extends Command{
     
 	public DriveForward(double inches) {
         //TODO once PID is working change this to distance
+		rightWheel.setMaxOutput(0.25);
+		leftWheel.setMaxOutput(0.25);
+		orientation.setMaxOutput(0.25);
 		if (rightEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative) 
 				== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent
 				&&  leftEncMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative) 

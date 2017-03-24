@@ -17,10 +17,13 @@ public class ControlGearIntake extends Command {
 
 	private double rotateSetPower;
 	private double rollerSetPower;
-	private double forwardSoftLimit = -0.03;
+	private double forwardSoftLimit = 0;
 	private double reverseSoftLimit = -0.6;
 	private double targetPosition = forwardSoftLimit;
+	private double previousCurrentDraw;
+	private double lastCurrentDraw;
 	private boolean positionMode = false;
+	private double currentReverseLimit = reverseSoftLimit;
 	private boolean hasGear = false;
 	
     public ControlGearIntake(boolean positionMode) {
@@ -34,6 +37,7 @@ public class ControlGearIntake extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	// Choose control mode
+    	System.out.println("INIT GEAR CONTROL");
     	if (positionMode && 
     			RobotMap.gearIntakeRotate.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative)
     			== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
@@ -59,34 +63,77 @@ public class ControlGearIntake extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (positionMode) {
+    		
     		RobotMap.gearIntakeRotate.set(getRotatePosition());
+    		
     	} else {
     		RobotMap.gearIntakeRotate.set(getRotatePower());
     	}
     	RobotMap.gearIntakeRoller.set(getRollerPower());
-    	
-    	if (positionMode) {
+    	//System.out.println("current reverse limit " + currentReverseLimit);
+    	/*if (positionMode) {
     		System.out.println("Target position: " + targetPosition + "   Position " + RobotMap.gearIntakeRotate.getPosition()); 
-    	}
+    	}*/
     }
 
 	private double getRotatePower() {
+		if (OI.zeroGearIntakeRotate.get()) {
+			//System.out.println("holding x");
+			RobotMap.gearIntakeRotate.enableForwardSoftLimit(false);
+			RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.PercentVbus);
+			RobotMap.gearIntakeRotate.set(0.2);
+			if ((RobotMap.gearIntakeRotate.getOutputCurrent() >= 1.625) && (lastCurrentDraw >= 1.625) && (previousCurrentDraw >= 1.625)) {
+				RobotMap.gearIntakeRotate.setPosition(0);
+				//System.out.println("ZEROED ENCODER");
+			}
+			previousCurrentDraw = lastCurrentDraw;
+			lastCurrentDraw = RobotMap.gearIntakeRotate.getOutputCurrent();
+			
+		} else {
+			RobotMap.gearIntakeRotate.enableForwardSoftLimit(true);
+			previousCurrentDraw = 0;
+			lastCurrentDraw = 0;
+		RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.Position);
 		if (OI.joystickTwo.getPOV() == 0) {
     		// Move intake up
     		rotateSetPower = -0.4;
     	} else if (OI.joystickTwo.getPOV() == 180) {
     		// Move intake down
-    		rotateSetPower = 0.4;
+    		rotateSetPower = 0.2;
     		
     	} else {
     		rotateSetPower = 0;
     	}
-		
+		}
 		return rotateSetPower;
 	}
 
 	
 	private double getRotatePosition() {
+		if (OI.zeroGearIntakeRotate.get()) {
+			targetPosition = 0.2;
+			//System.out.println("holding x");
+			RobotMap.gearIntakeRotate.enableForwardSoftLimit(false);
+			RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.PercentVbus);
+			RobotMap.gearIntakeRotate.set(0.2);
+			if ((RobotMap.gearIntakeRotate.getOutputCurrent() >= 1.625) && (lastCurrentDraw >= 1.625) && (previousCurrentDraw >= 1.625)) {
+				RobotMap.gearIntakeRotate.setPosition(0);
+				//System.out.println("ZEROED ENCODER");
+				
+				currentReverseLimit = -0.65;
+				reverseSoftLimit = -0.65;
+				RobotMap.gearIntakeRotate.setReverseSoftLimit(reverseSoftLimit);
+			}
+			previousCurrentDraw = lastCurrentDraw;
+			lastCurrentDraw = RobotMap.gearIntakeRotate.getOutputCurrent();
+			
+		} else {
+			RobotMap.gearIntakeRotate.enableForwardSoftLimit(true);
+			RobotMap.gearIntakeRotate.enableReverseSoftLimit(true);
+			previousCurrentDraw = 0;
+			lastCurrentDraw = 0;
+		RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.Position);
+			
 		if (OI.joystickTwo.getPOV() == 0) {
 			// Move intake up
 			targetPosition -= 0.05;
@@ -98,7 +145,7 @@ public class ControlGearIntake extends Command {
 		// Constrain targetPosition
 		if (targetPosition > forwardSoftLimit) targetPosition = forwardSoftLimit;
 		if (targetPosition < reverseSoftLimit) targetPosition = reverseSoftLimit;
-		
+		}
 		return targetPosition;
 	}
 	
