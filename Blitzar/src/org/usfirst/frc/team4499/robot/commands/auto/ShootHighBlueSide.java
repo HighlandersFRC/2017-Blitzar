@@ -9,6 +9,7 @@ import org.usfirst.frc.team4499.robot.commands.Turn;
 import org.usfirst.frc.team4499.robot.commands.TurretMP;
 import org.usfirst.frc.team4499.robot.commands.Wait;
 import org.usfirst.frc.team4499.robot.commands.SetFlywheelVelocity;
+import org.usfirst.frc.team4499.robot.commands.SetGearIntake;
 import org.usfirst.frc.team4499.robot.commands.SetReceiverPower;
 import org.usfirst.frc.team4499.robot.commands.SetVortexPower;
 
@@ -24,7 +25,6 @@ public class ShootHighBlueSide extends CommandGroup {
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
-
         // To run multiple commands at the same time,
         // use addParallel()
         // e.g. addParallel(new Command1());
@@ -37,11 +37,15 @@ public class ShootHighBlueSide extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
+    	
+    	addParallel(new SetGearIntake(-0.6, -0.12));
     	// FIRE AT THE START
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
-    	addParallel(new SetFlywheelVelocity(-3600)); //-3412
+    	addParallel(new SetFlywheelVelocity(-4000)); //-3412
+    	
+    	addParallel(new TurretMP(0.5));
     	//addParallel(new SetVortexPower(0));
     	//addParallel(new SetReceiverPower(0));
     	//addParallel(new SetAgitatorPower(0));
@@ -62,6 +66,8 @@ public class ShootHighBlueSide extends CommandGroup {
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
     	addParallel(new SetFlywheelVelocity(0));
+    	
+    	// Back up for 5 points
     	addSequential(new NavXDriveForward(-0.5, 2.5));
     	
     	/*

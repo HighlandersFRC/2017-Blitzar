@@ -225,9 +225,9 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheelMaster.setP(0.1); //0,07 for comp
-		RobotMap.flywheelMaster.setI(0.0008); //0.00022 for comp
-		RobotMap.flywheelMaster.setD(1.5); // 0.9 for comp
+		RobotMap.flywheelMaster.setP(0.08); //0,07 for comp
+		RobotMap.flywheelMaster.setI(0); // 0.001 for comp
+		RobotMap.flywheelMaster.setD(0); // 1.5
 		RobotMap.flywheelMaster.setIZone(300);
 		
 		RobotMap.navx.zeroYaw();
@@ -284,8 +284,8 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.turretMotor.setEncPosition(0);
-		RobotMap.turretMotor.setForwardSoftLimit(3.3);
-		RobotMap.turretMotor.setReverseSoftLimit(-3.0);
+		RobotMap.turretMotor.setForwardSoftLimit(0.65);
+		RobotMap.turretMotor.setReverseSoftLimit(-1.5);
 		RobotMap.turretMotor.enableForwardSoftLimit(true);
 		RobotMap.turretMotor.enableReverseSoftLimit(true);
 		RobotMap.turretMotor.set(0);
@@ -342,9 +342,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-	System.out.println("fire count " + fireCount);
+//	System.out.println("fire count " + fireCount);
 		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition() + "roller pos " + RobotMap.gearIntakeRoller.getPosition());
 		// Control flywheel
+	//System.out.println("turret pos " + RobotMap.turretMotor.getPosition());
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			flywheel.controlFlywheelVelocity();
 			//flywheel.controlFlywheelPercentVBus();

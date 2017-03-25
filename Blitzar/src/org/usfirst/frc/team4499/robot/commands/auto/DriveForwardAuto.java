@@ -28,16 +28,17 @@ public class DriveForwardAuto extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	//addSequential(new DriveForward(80));
-    	addParallel(new SetGearIntake(-0.6, -0.12));
+    	addParallel(new SetGearIntake(-0.55, -0.12));
     //	addSequential(new Wait(0));
     	//addSequential(new DriveForward(68), 3);
-    	addSequential(new NavXDriveForward(0.3, 1.8));
-    	addSequential(new Wait(1));
+    	addSequential(new NavXDriveForward(0.28, 2.3));
+    	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
-    	addSequential(new Wait(1));
+    	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
-    	addSequential(new Wait(5));
+    	addSequential(new Wait(1.5));
     	addSequential(new NavXDriveForward(-0.35, 0.6));
+    	addSequential(new SetGearIntake(0,0));
     	
     }
 }

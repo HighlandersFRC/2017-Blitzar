@@ -32,8 +32,8 @@ public class AutoChooser {
     	}
     	else if(OI.dialFive.get()){
     		//Low Bar
-    		defense = new NoAuto();
-    	//	System.out.println("Low Bar Chosen");
+    		defense = new ShootHighGear();
+    		System.out.println("SHOOT HIGH GEAR AUTO SELECTED");
     	}
     	else{
     		//NoAuto

@@ -26,8 +26,8 @@ public class TurretMP extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	//RobotMap.turretMotor.disable();
-    	RobotMap.turretMotor.changeControlMode(TalonControlMode.MotionMagic);
-    	//RobotMap.turretMotor.setPID(6, 0.001, 0);
+    	RobotMap.turretMotor.changeControlMode(TalonControlMode.Position);
+    	RobotMap.turretMotor.setPID(0.5, 0.001, 0);
     	//RobotMap.turretMotor.setF(0.2);
     	RobotMap.turretMotor.setAllowableClosedLoopErr(0);
     	RobotMap.turretMotor.setMotionMagicCruiseVelocity(55); //max 420
@@ -44,6 +44,7 @@ public class TurretMP extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//RobotMap.turretMotor.set(setAngle);
+    	System.out.println("Trying to get to " + setAngle);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -19,6 +19,7 @@ public class SetFlywheelVelocity extends Command {
     	requires(Robot.flywheel);
     	//RobotMap.flywheelMaster.setAllowableClosedLoopErr(0);
     	//RobotMap.flywheelMaster.clearIAccum();
+    	System.out.println("speed " + RobotMap.flywheelMaster.getSpeed());
     	setVelocity = desiredVelocity;
     }
 
@@ -32,7 +33,7 @@ public class SetFlywheelVelocity extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	RobotMap.flywheelMaster.set(setVelocity);
-    	System.out.println("setpoint " + RobotMap.flywheelMaster.getSetpoint());
+    	//System.out.println("setpoint " + RobotMap.flywheelMaster.getSetpoint());
     }
 
     // Make this return true when this Command no longer needs to run execute()

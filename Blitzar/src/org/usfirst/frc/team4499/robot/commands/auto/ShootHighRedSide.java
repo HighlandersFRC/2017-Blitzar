@@ -45,7 +45,7 @@ public class ShootHighRedSide extends CommandGroup {
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
-    	addParallel(new SetFlywheelVelocity(-3652)); //-3412
+    	addParallel(new SetFlywheelVelocity(-4100)); //-3412
     	//addParallel(new SetVortexPower(0));
     	//addParallel(new SetReceiverPower(0));
     	//addParallel(new SetAgitatorPower(0));

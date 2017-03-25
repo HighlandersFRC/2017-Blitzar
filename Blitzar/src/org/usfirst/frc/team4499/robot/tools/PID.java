@@ -44,7 +44,7 @@ public class PID {
 		
         if ((error * PValue < maxOutput) && (error * PValue > minOutput)) {
         	if (Math.abs(error) < IZone) {
-        		System.out.println("IN I ZONE");
+        		//System.out.println("IN I ZONE");
         		totalError += error;
         	}
         } else {
