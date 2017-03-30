@@ -28,7 +28,7 @@ public class AutoChooser {
     	else if(OI.dialFour.get()){
     		// B_Defense
     		defense = new NoAuto();
-    		System.out.println("NO AUTO SELECTED");
+    		System.out.println("DRIVE FORWARD");
     	}
     	else if(OI.dialFive.get()){
     		//Low Bar

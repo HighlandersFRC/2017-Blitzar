@@ -31,13 +31,15 @@ public class DriveForwardAuto extends CommandGroup {
     	addParallel(new SetGearIntake(-0.55, -0.12));
     //	addSequential(new Wait(0));
     	//addSequential(new DriveForward(68), 3);
+    	//addSequential(new Turn(180, true), 3);
     	addSequential(new NavXDriveForward(0.28, 2.3));
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
     	addSequential(new Wait(1.5));
-    	addSequential(new NavXDriveForward(-0.35, 0.6));
+    		addSequential(new NavXDriveForward(-0.35, 0.6));
+    	//addSequential(new DriveForward(68), 3);
     	addSequential(new SetGearIntake(0,0));
     	
     }

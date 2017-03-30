@@ -33,7 +33,7 @@ public class DriveForward extends Command{
 	PID rightWheel = new PID(kP,kI,kD, kIZone); // PID's for both motors
 	PID leftWheel = new PID(kP,kI,kD, kIZone);
 	PID orientation = new PID(0.025, 0.0001, 0, kIZone);
-	DCMotor rightEncMotor = RobotMap.rightMotorTwo;
+	DCMotor rightEncMotor = RobotMap.rightMotorOne; //one for practice bot, two for comp bot
 	DCMotor leftEncMotor = RobotMap.leftMotorOne;
 	
 	
@@ -69,6 +69,7 @@ public class DriveForward extends Command{
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	RobotMap.navx.zeroYaw();
     	RobotMap.rightMotorOne.zeroEncoder();
     	RobotMap.rightMotorTwo.zeroEncoder();
     	RobotMap.leftMotorOne.zeroEncoder();

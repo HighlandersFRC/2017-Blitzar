@@ -21,8 +21,8 @@ public class RobotMap {
 	
 	public static DCMotor leftMotorOne = new DCMotor(1); //1 // Has encoder       accretion 2431
 	public static DCMotor leftMotorTwo = new DCMotor(2); //2
-	public static DCMotor rightMotorOne = new DCMotor(3); //3 // has the encoder
-	public static DCMotor rightMotorTwo = new DCMotor(4); //4
+	public static DCMotor rightMotorOne = new DCMotor(3); //3 // has the encoder on practice bot
+	public static DCMotor rightMotorTwo = new DCMotor(4); //4 // has the encoder on comp bot
 	
 	// Accretion
 	// yellow 2 encoder left

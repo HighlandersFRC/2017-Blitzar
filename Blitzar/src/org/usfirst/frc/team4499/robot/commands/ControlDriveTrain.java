@@ -70,7 +70,7 @@ public class ControlDriveTrain extends Command {
     	if (calcCurrentPercent(rightMotorTwo) < minCurrentPercentage) {
     		minCurrentPercentage = calcCurrentPercent(rightMotorTwo);
     	}
-    	System.out.println("Current protection scaled to " + minCurrentPercentage);
+    	//System.out.println("Current protection scaled to " + minCurrentPercentage);
     	
     	limitMotorPower(leftMotorOne, OI.joystickOne.getRawAxis(1), minCurrentPercentage);
     	limitMotorPower(leftMotorTwo, OI.joystickOne.getRawAxis(1), minCurrentPercentage);

@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team4499.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -96,6 +97,8 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		CameraServer.getInstance().startAutomaticCapture();
+		
 		
 		oi = new OI();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
@@ -167,9 +170,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.flywheelSlave.changeControlMode(TalonControlMode.Follower);
 		RobotMap.flywheelSlave.set(5);
 		RobotMap.flywheelMaster.setF(0.02141);
-		RobotMap.flywheelMaster.setP(0.07);
-		RobotMap.flywheelMaster.setI(0.00022); //0.00022
-		RobotMap.flywheelMaster.setD(0.9); // 1.3	
+		RobotMap.flywheelMaster.setP(0.1);
+		RobotMap.flywheelMaster.setI(0); //0.00022
+		RobotMap.flywheelMaster.setD(0.5); // 1.3	
 		
 	
 		RobotMap.navx.zeroYaw();
@@ -225,9 +228,9 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheelMaster.setP(0.08); //0,07 for comp
+		RobotMap.flywheelMaster.setP(0.1); //0,07 for comp
 		RobotMap.flywheelMaster.setI(0); // 0.001 for comp
-		RobotMap.flywheelMaster.setD(0); // 1.5
+		RobotMap.flywheelMaster.setD(0.5); // 1.5
 		RobotMap.flywheelMaster.setIZone(300);
 		
 		RobotMap.navx.zeroYaw();
@@ -243,7 +246,8 @@ public class Robot extends IterativeRobot {
 		RobotMap.leftMotorTwo.setInverted(false);
 		
 		RobotMap.rightMotorTwo.reverseSensor(true);
-		RobotMap.leftMotorOne.reverseSensor(false);
+		RobotMap.leftMotorOne.reverseSensor(true);
+		RobotMap.rightMotorOne.reverseSensor(true);
 		
 		RobotMap.rightMotorOne.setCurrentLimit(10);
 		RobotMap.rightMotorTwo.setCurrentLimit(10);
@@ -594,7 +598,7 @@ public class Robot extends IterativeRobot {
 		
 	//	System.out.println("Left trigger: " + OI.joystickOne.getRawAxis(2) + " Right trigger: " + OI.joystickOne.getRawAxis(3));
 		
-		//System.out.println("Right Pos " + RobotMap.rightMotorTwo.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
+		System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
 		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("gear intake current draw " + RobotMap.gearIntakeRotate.getOutputCurrent());
