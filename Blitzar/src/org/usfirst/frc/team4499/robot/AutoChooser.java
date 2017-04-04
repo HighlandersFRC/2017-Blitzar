@@ -9,32 +9,40 @@ public class AutoChooser {
 	public static enum position{NONE,LEFT,LEFTMID,CENTER,RIGHTMID,RIGHT};
 	public static CommandGroup getDefense(){
 		CommandGroup defense = null;
-		
-		if(OI.dialOne.get()){
-			// ChevalDeFrise Defense
-			defense = new DriveForwardAuto();
-    		System.out.println("DRIVE FORWARD SELECTED");
+			
+		if(OI.dialTwo.get() && OI.switchTwo.get()){
+			// Middle Gear Red shoots 10 balls
+			defense = new MiddleGearRed();
+    		System.out.println("Middle Gear Red");
     	}
+		else if(OI.dialTwo.get() && OI.switchThree.get()){
+    		// Right Gear Red Auto 10 balls
+    		defense = new RightGearRedAuto();
+    		System.out.println("Right Gear Red Auto");
+		}
+		
+		else if(OI.switchOne.get() && OI.dialTwo.get()){
+			// Right Gear Blue Auto 
+			defense = new LeftGearRedAuto();
+			System.out.println("Left Gear Red Auto");
+		}	
+		else if(OI.switchThree.get() && OI.dialThree.get()){
+    		// Right Gear Blue Auto 
+    		defense = new RightGearBlueAuto();
+    		System.out.println("Right Gear Blue Auto");
+		}
+		else if(OI.switchThree.get() && OI.dialThree.get()){
+    		// Right Gear Blue Auto 
+    		defense = new RightGearBlueAuto();
+    		System.out.println("Right Gear Blue Auto");
+		}
+		/*
     	else if(OI.dialTwo.get()){
     		// Portcullis Defense
     		defense = new ShootHighRedSide();
     		System.out.println("SHOOT HIGH RED SIDE SELECTED");
     	}
-    	else if(OI.dialThree.get()){
-    		// D_Defense
-    		defense = new ShootHighBlueSide();
-    		System.out.println("SHOOT HIGH BLUE SIDE SELECTED");
-    	}
-    	else if(OI.dialFour.get()){
-    		// B_Defense
-    		defense = new NoAuto();
-    		System.out.println("DRIVE FORWARD");
-    	}
-    	else if(OI.dialFive.get()){
-    		//Low Bar
-    		defense = new ShootHighGear();
-    		System.out.println("SHOOT HIGH GEAR AUTO SELECTED");
-    	}
+    	*/
     	else{
     		//NoAuto
     		defense = new NoAuto();

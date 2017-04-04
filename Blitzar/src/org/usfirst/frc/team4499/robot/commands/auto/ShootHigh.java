@@ -43,7 +43,7 @@ public class ShootHigh extends CommandGroup {
     	addSequential(new Wait(3));
     	*/
     	
-    	addParallel(new SetFlywheelVelocity(0));
+    /*	addParallel(new SetFlywheelVelocity(0));
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
@@ -56,13 +56,13 @@ public class ShootHigh extends CommandGroup {
     	//addSequential(new NavXDriveForward(0.38, 2));
     	addSequential(new DriveForward(40), 2);
     	addSequential(new NavXDriveForward(0.2, 1));
-    	
-    	addParallel(new SetFlywheelVelocity(-4000));
+    	*/
+    	addParallel(new SetFlywheelVelocity(-4200));
     	//addParallel(new TrackTargetPID());
     	//addParallel(new AutoFlywheelSpeed());
     	addSequential(new Wait(1));
     	addParallel(new SetVortexPower(-1));
-    	addParallel(new SetReceiverPower(-1));
+    	addParallel(new SetReceiverPower(1));
     	addParallel(new SetAgitatorPower(1));
     
     }

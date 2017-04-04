@@ -6,8 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import org.json.*;
+//import org.json.*;
 
 public class Tegra implements Runnable{
 	public static int x = -1;
@@ -86,12 +85,16 @@ public class Tegra implements Runnable{
 			               // int point[] = parsePoint(fromClient);
 			                //System.out.println(fromClient);
 			                System.out.println(fromClient);
-			                JSONObject obj = new JSONObject(fromClient);
-			                x = obj.getInt("xCenter");
-			                y = obj.getInt("yCenter");
-			                distance = obj.getDouble("distance");
-			                theta = obj.getDouble("theta");
-			                
+			                //JSONObject obj = new JSONObject(fromClient);
+			                //x = obj.getInt("xCenter");
+			                //y = obj.getInt("yCenter");
+			                //distance = obj.getDouble("distance");
+			                //theta = obj.getDouble("theta");
+			                x = -1;
+			                y = -1;
+			                distance = -1;
+			                theta = -1;
+			                	
 			                
 			                if (counter > 30) {
 			                //System.out.println("x:" + x + " y:" + y + " distance:" + distance + " theta:" + theta);

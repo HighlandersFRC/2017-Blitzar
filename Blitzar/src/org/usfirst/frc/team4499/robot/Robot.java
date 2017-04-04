@@ -25,7 +25,7 @@ import java.io.IOException;
 import org.usfirst.frc.team4499.robot.OI;
 import org.usfirst.frc.team4499.robot.subsystems.*;
 import org.usfirst.frc.team4499.robot.tools.CMDGroup;
-import org.usfirst.frc.team4499.robot.tools.Tegra;
+//import org.usfirst.frc.team4499.robot.tools.Tegra;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,7 +38,7 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
-	Tegra tegra;
+	//Tegra tegra;
 	Command autonomousCommand;
 	//SendableChooser<Command> chooser = new SendableChooser<>();
 	CMDGroup autoGroup = new CMDGroup();
@@ -57,12 +57,12 @@ public class Robot extends IterativeRobot {
 	
 	
 	
-	public static Turn turn = new Turn(90, false);
+	//public static Turn turn = new Turn(90, false);
 	public static ShootHigh shootHighAuto = new ShootHigh();
-	public static DriveForward driveStraight = new DriveForward(75.5); 
+	//public static DriveForward driveStraight = new DriveForward(75.5); 
 	public static TrackTargetPID trackTarget = new TrackTargetPID();
 	public static AutoFlywheelSpeed autoFlywheelSpeed = new AutoFlywheelSpeed();
-	public static NavXDriveForward gyroDriveForward = new NavXDriveForward(0.5, 2);
+	//public static NavXDriveForward gyroDriveForward = new NavXDriveForward(0.5, 2);
 	public static SetVortexPower stopVortex = new SetVortexPower(0);
 	public static SetReceiverPower stopReceiver = new SetReceiverPower(0);
 	public static SetAgitatorPower stopAgitator = new SetAgitatorPower(0);
@@ -97,25 +97,46 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		CameraServer.getInstance().startAutomaticCapture();
-		
+		CameraServer.getInstance().startAutomaticCapture(0);
+		CameraServer.getInstance().startAutomaticCapture(1);
 		
 		oi = new OI();
-		//chooser.addDefault("Default Auto", new ExampleCommand());
-	//	chooser.addObject("My Auto", new MyAutoCommand());
-		//SmartDashboard.putData("Auto mode", chooser);
 		
 		RobotMap.gearIntakeRotate.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.gearIntakeRotate.setPosition(0);
 		
 		RobotMap.navx.zeroYaw();
-		
+		/*
 		try {
 			tegra = new Tegra();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		*/
+		RobotMap.rightMotorOne.setInverted(false);
+		RobotMap.rightMotorTwo.setInverted(false);
+		RobotMap.leftMotorOne.setInverted(false);
+		RobotMap.leftMotorTwo.setInverted(false);
 		
+		RobotMap.rightMotorTwo.reverseSensor(true);
+		RobotMap.leftMotorOne.reverseSensor(true);
+		RobotMap.rightMotorOne.reverseSensor(true);
+		
+		RobotMap.rightMotorOne.setCurrentLimit(10);
+		RobotMap.rightMotorTwo.setCurrentLimit(10);
+		RobotMap.leftMotorOne.setCurrentLimit(10);
+		RobotMap.leftMotorTwo.setCurrentLimit(10);
+		RobotMap.rightMotorOne.setVoltageRampRate(9999);
+		RobotMap.rightMotorTwo.setVoltageRampRate(9999);
+		RobotMap.leftMotorOne.setVoltageRampRate(9999);
+		RobotMap.leftMotorTwo.setVoltageRampRate(9999);
+		
+
+		
+		RobotMap.rightMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.leftMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.rightMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.leftMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 	}
 
 	/**
@@ -135,7 +156,7 @@ public class Robot extends IterativeRobot {
 		
 		Scheduler.getInstance().run();
 	}
-
+ 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -149,15 +170,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//autonomousCommand = chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-		 
+		
 		RobotMap.flywheelMaster.configNominalOutputVoltage(+0f, -0f);
 		RobotMap.flywheelMaster.configPeakOutputVoltage(+1f, -12f); // Only drive forward
 		RobotMap.flywheelMaster.set(0);
@@ -228,44 +241,17 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheelMaster.setP(0.1); //0,07 for comp
-		RobotMap.flywheelMaster.setI(0); // 0.001 for comp
-		RobotMap.flywheelMaster.setD(0.5); // 1.5
+		RobotMap.flywheelMaster.setP(0.13); //0,07 for comp
+		RobotMap.flywheelMaster.setI(.0002); // 0.001 for comp
+		RobotMap.flywheelMaster.setD(10); // 1.5
 		RobotMap.flywheelMaster.setIZone(300);
 		
-		RobotMap.navx.zeroYaw();
-		
+	
 		// Max RPM is 4,800, max change in native units per 100ms is 13,140
 		// 1023 / 13,140 = 0.078
 		//RobotMap.flywheel.setF(0.078);
 		RobotMap.flywheelMaster.setF(0.0235); //0.03122 0.015 COMP BOT
-		
-		RobotMap.rightMotorOne.setInverted(false);
-		RobotMap.rightMotorTwo.setInverted(false);
-		RobotMap.leftMotorOne.setInverted(false);
-		RobotMap.leftMotorTwo.setInverted(false);
-		
-		RobotMap.rightMotorTwo.reverseSensor(true);
-		RobotMap.leftMotorOne.reverseSensor(true);
-		RobotMap.rightMotorOne.reverseSensor(true);
-		
-		RobotMap.rightMotorOne.setCurrentLimit(10);
-		RobotMap.rightMotorTwo.setCurrentLimit(10);
-		RobotMap.leftMotorOne.setCurrentLimit(10);
-		RobotMap.leftMotorTwo.setCurrentLimit(10);
-		RobotMap.rightMotorOne.setVoltageRampRate(9999);
-		RobotMap.rightMotorTwo.setVoltageRampRate(9999);
-		RobotMap.leftMotorOne.setVoltageRampRate(9999);
-		RobotMap.leftMotorTwo.setVoltageRampRate(9999);
-		
-
-		
-		RobotMap.rightMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.leftMotorOne.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.rightMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.leftMotorTwo.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		
-		
+				
 		RobotMap.flywheelMaster.configNominalOutputVoltage(+0f, -0f);
 		RobotMap.flywheelMaster.configPeakOutputVoltage(+1f, -12f); // Only drive forward
 		RobotMap.flywheelMaster.set(0);
@@ -280,8 +266,6 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.receiverRight.set(0);
 		
-		
-	
 		
 		RobotMap.climbMotorOne.set(0);
 		RobotMap.climbMotorTwo.set(0);
@@ -395,12 +379,12 @@ public class Robot extends IterativeRobot {
 		if (fireEnabled) {
 			if (fireCount > 20 && fireCount <= 40) {
 				// Run reverse
-				vortex.setVortexPower(-1);
+				vortex.setVortexPower(-.5f);
 				receiver.setReceiverPower(1);
 				RobotMap.agitatorMotor.set(-1);
 			} else {
 			// Run forward
-			vortex.setVortexPower(-1);
+			vortex.setVortexPower(-.5f);
 			receiver.setReceiverPower(1);
 			RobotMap.agitatorMotor.set(1);
 			}

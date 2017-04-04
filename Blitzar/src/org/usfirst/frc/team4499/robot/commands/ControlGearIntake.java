@@ -37,7 +37,7 @@ public class ControlGearIntake extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	// Choose control mode
-    	System.out.println("INIT GEAR CONTROL");
+    	//System.out.println("INIT GEAR CONTROL");
     	if (positionMode && 
     			RobotMap.gearIntakeRotate.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative)
     			== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)
@@ -62,6 +62,7 @@ public class ControlGearIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	System.out.println("Execute GI");
     	if (positionMode) {
     		
     		RobotMap.gearIntakeRotate.set(getRotatePosition());
@@ -93,17 +94,20 @@ public class ControlGearIntake extends Command {
 			RobotMap.gearIntakeRotate.enableForwardSoftLimit(true);
 			previousCurrentDraw = 0;
 			lastCurrentDraw = 0;
-		RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.Position);
-		if (OI.joystickTwo.getPOV() == 0) {
-    		// Move intake up
-    		rotateSetPower = -0.4;
-    	} else if (OI.joystickTwo.getPOV() == 180) {
-    		// Move intake down
-    		rotateSetPower = 0.2;
-    		
-    	} else {
-    		rotateSetPower = 0;
-    	}
+			RobotMap.gearIntakeRotate.changeControlMode(TalonControlMode.Position);
+			if (OI.joystickTwo.getPOV() == 0) {
+	    		// Move intake up
+				System.out.println("Gear Down");
+	    		rotateSetPower = -0.4;
+	    		
+	    	} else if (OI.joystickTwo.getPOV() == 180) {
+	    		// Move intake down
+	    		System.out.println("Gear Up");
+	    		rotateSetPower = 0.2;
+	    		
+	    	} else {
+	    		rotateSetPower = 0;
+	    	}
 		}
 		return rotateSetPower;
 	}
@@ -152,7 +156,7 @@ public class ControlGearIntake extends Command {
 	private double getRollerPower() {
 		if (OI.joystickTwo.getRawAxis(2) > 0.5) {	
     		// Left trigger = eject gear
-    		rollerSetPower = 1;
+    		rollerSetPower = .5;
     		// No longer has gear
     		hasGear = false;
     	} else if (OI.joystickTwo.getRawAxis(3) > 0.5) {
