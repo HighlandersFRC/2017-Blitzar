@@ -241,15 +241,11 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-<<<<<<< HEAD
+
 		RobotMap.flywheelMaster.setP(0.13); //0,07 for comp
 		RobotMap.flywheelMaster.setI(.0002); // 0.001 for comp
 		RobotMap.flywheelMaster.setD(10); // 1.5
-=======
-		RobotMap.flywheelMaster.setP(0.05); //0,07 for comp
-		RobotMap.flywheelMaster.setI(0); // 0.001 for comp
-		RobotMap.flywheelMaster.setD(0.2); // 1.5
->>>>>>> 3f532b298e4494ec5aa526adf8558d5e461dc301
+
 		RobotMap.flywheelMaster.setIZone(300);
 		
 	
