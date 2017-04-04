@@ -228,9 +228,9 @@ public class Robot extends IterativeRobot {
 		vortexPower = 0;
 		lifterPower = 0;
 		
-		RobotMap.flywheelMaster.setP(0.1); //0,07 for comp
+		RobotMap.flywheelMaster.setP(0.05); //0,07 for comp
 		RobotMap.flywheelMaster.setI(0); // 0.001 for comp
-		RobotMap.flywheelMaster.setD(0.5); // 1.5
+		RobotMap.flywheelMaster.setD(0.2); // 1.5
 		RobotMap.flywheelMaster.setIZone(300);
 		
 		RobotMap.navx.zeroYaw();
@@ -598,7 +598,7 @@ public class Robot extends IterativeRobot {
 		
 	//	System.out.println("Left trigger: " + OI.joystickOne.getRawAxis(2) + " Right trigger: " + OI.joystickOne.getRawAxis(3));
 		
-		System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
 		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("gear intake current draw " + RobotMap.gearIntakeRotate.getOutputCurrent());
