@@ -27,13 +27,13 @@ public class MiddleGearRed extends CommandGroup {
     	addParallel(new SetFlywheelVelocity(0));
     	//addSequential(new DriveForward(68), 3);
     	//addSequential(new Turn(180, true), 3);
-    	addSequential(new NavXDriveForwardDistance(.28, 76));
+    	addSequential(new NavXDriveForwardDistance(.28, 76, true));
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
     	addSequential(new Wait(1.5));
-    		addSequential(new NavXDriveForwardDistance(-0.28, 10));
+    		addSequential(new NavXDriveForwardDistance(-0.28, 10, true));
     	//addSequential(new DriveForward(68), 3);
     	addSequential(new SetGearIntake(0,0));
     	

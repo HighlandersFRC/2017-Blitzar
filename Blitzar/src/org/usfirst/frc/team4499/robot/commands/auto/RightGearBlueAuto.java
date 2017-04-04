@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4499.robot.commands.auto;
 
+import org.usfirst.frc.team4499.robot.commands.NavXDriveForward;
 import org.usfirst.frc.team4499.robot.commands.NavXDriveForwardDistance;
 import org.usfirst.frc.team4499.robot.commands.SetGearIntake;
 import org.usfirst.frc.team4499.robot.commands.Turn;
@@ -18,17 +19,17 @@ public class RightGearBlueAuto extends CommandGroup {
     //	addSequential(new Wait(0));
     	//addSequential(new DriveForward(68), 3);
     	//addSequential(new Turn(180, true), 3);
-    	addSequential(new NavXDriveForwardDistance(.3,87));
+    	addSequential(new NavXDriveForwardDistance(.3, 87, true));
     	addSequential(new Wait(.2));
     	addSequential(new Turn(-60,true), 2);
     	addSequential(new Wait(.1));
-    	addSequential(new NavXDriveForwardDistance(.3, 20));
+    	addSequential(new NavXDriveForwardDistance(.20, 15, false));
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
     	addSequential(new Wait(1.5));
-    		addSequential(new NavXDriveForwardDistance(-0.35, 6));
+    		addSequential(new NavXDriveForwardDistance(-0.35, 6, false));
     	//addSequential(new DriveForward(68), 3);
     	addSequential(new SetGearIntake(0,0));
     }

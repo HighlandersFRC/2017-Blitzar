@@ -25,10 +25,12 @@ public class NavXDriveForwardDistance extends Command {
 	private PID orientation; 
 	private double startTime;
 	private boolean across = false;
-    public NavXDriveForwardDistance(double speed, double distance) {
+	private boolean rampUp;
+    public NavXDriveForwardDistance(double speed, double distance, boolean shouldRamp) {
     	this.distance = distance*811.359;
     	this.speed = speed;
     	this.firstDistance = this.distance * .75;
+    	this.rampUp = shouldRamp;
     	orientation = new PID(kp,ki,kd, kIZone);
     	//orientation.setMaxOutput(.25);
     	//orientation.setMinOutput(-.25);
@@ -42,7 +44,7 @@ public class NavXDriveForwardDistance extends Command {
     protected void initialize() {
     	/*System.out.println("Right"+rightMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative));
     	System.out.println("Left"+leftMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative));
-    	if(rightMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative)
+    	if(rightMotor.isSensorPre0sent(FeedbackDevice.CtreMagEncoder_Relative)
     			== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent
     			&& leftMotor.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative)
     			== CANTalon.FeedbackDeviceStatus.FeedbackStatusPresent)  {
@@ -59,28 +61,28 @@ public class NavXDriveForwardDistance extends Command {
     	
     }
 
-    // Csalled repeatedly when this Command is scheduled to run
+    // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if (Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-(RobotMap.rightMotorOne.getEncPosition()))/2.0)<this.firstDistance)
-    	{
-    	orientation.updatePID(RobotMap.navx.getAngle());
-    	RobotMap.leftMotorOne.set(-orientation.getResult()-speed*2);
-    	RobotMap.leftMotorTwo.set(-orientation.getResult()-speed*2);
-    	
-    	RobotMap.rightMotorOne.set(-orientation.getResult()+speed*2);
-    	RobotMap.rightMotorTwo.set(-orientation.getResult()+speed*2);
-    	
+    	if (Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-
+    			(RobotMap.rightMotorOne.getEncPosition()))/2.0)<this.firstDistance) {
+    		setMotorPowerNavXPID(2);
+    	} else {
+    		setMotorPowerNavXPID(1);
     	}
-    	else 
-    	{
-    		orientation.updatePID(RobotMap.navx.getAngle());
-        	RobotMap.leftMotorOne.set(-orientation.getResult()-speed);
-        	RobotMap.leftMotorTwo.set(-orientation.getResult()-speed);
-        	
-        	RobotMap.rightMotorOne.set(-orientation.getResult()+speed);
-        	RobotMap.rightMotorTwo.set(-orientation.getResult()+speed);
-    	}
-    	}
+    }
+
+	private void setMotorPowerNavXPID(double multiplier) {
+		if (!rampUp) {
+			multiplier = 1;
+		}
+		
+		orientation.updatePID(RobotMap.navx.getAngle());
+		RobotMap.leftMotorOne.set(-orientation.getResult()-speed*multiplier);
+		RobotMap.leftMotorTwo.set(-orientation.getResult()-speed*multiplier);
+		
+		RobotMap.rightMotorOne.set(-orientation.getResult()+speed*multiplier);
+		RobotMap.rightMotorTwo.set(-orientation.getResult()+speed*multiplier);
+	}
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {

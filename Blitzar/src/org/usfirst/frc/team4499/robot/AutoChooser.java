@@ -10,10 +10,13 @@ public class AutoChooser {
 	public static CommandGroup getDefense(){
 		CommandGroup defense = null;
 			
+		
+		// RED SIDE AUTOS
+		
 		if(OI.dialTwo.get() && OI.switchTwo.get()){
 			// Middle Gear Red shoots 10 balls
 			defense = new MiddleGearRed();
-    		System.out.println("Middle Gear Red");
+    		System.out.println("Middle Gear Red Auto");
     	}
 		else if(OI.dialTwo.get() && OI.switchThree.get()){
     		// Right Gear Red Auto 10 balls
@@ -21,20 +24,37 @@ public class AutoChooser {
     		System.out.println("Right Gear Red Auto");
 		}
 		
-		else if(OI.switchOne.get() && OI.dialTwo.get()){
-			// Right Gear Blue Auto 
+		else if(OI.dialTwo.get() && OI.switchOne.get()){
+			// Left Gear Red Auto
 			defense = new LeftGearRedAuto();
 			System.out.println("Left Gear Red Auto");
-		}	
-		else if(OI.switchThree.get() && OI.dialThree.get()){
+		}
+		
+		///////////////////////////
+		
+		// BLUE SIDE AUTOS
+		else if(OI.dialThree.get() && OI.switchThree.get()){
     		// Right Gear Blue Auto 
     		defense = new RightGearBlueAuto();
     		System.out.println("Right Gear Blue Auto");
 		}
-		else if(OI.switchThree.get() && OI.dialThree.get()){
-    		// Right Gear Blue Auto 
-    		defense = new RightGearBlueAuto();
-    		System.out.println("Right Gear Blue Auto");
+		else if(OI.dialThree.get() && OI.switchTwo.get()){
+    		// Middle Gear Blue Auto
+    		defense = new MiddleGearBlue();
+    		System.out.println("Middle Gear Blue Auto");
+		}
+		else if(OI.dialThree.get() && OI.switchOne.get()){
+    		// Left Gear Blue Auto
+    		defense = new LeftGearBlue();
+    		System.out.println("Left Gear Blue Auto");
+		} 
+		
+		// Drive forward
+		
+		else if (OI.dialOne.get()) {
+			// Drive Forward Auto
+			defense = new DriveForwardAuto();
+			System.out.println("Drive Forward Auto");
 		}
 		/*
     	else if(OI.dialTwo.get()){

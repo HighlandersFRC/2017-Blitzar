@@ -27,17 +27,17 @@ public class RightGearRedAuto extends CommandGroup {
     	addParallel(new SetAgitatorPower(0));
     	addParallel(new SetFlywheelVelocity(0));
     	
-    	addSequential(new NavXDriveForwardDistance(.25, 87));
+    	addSequential(new NavXDriveForwardDistance(.25, 87, true));
     	addSequential(new Wait(.2));
     	addSequential(new Turn(-60,true), 2.5);
     	addSequential(new Wait(.1));
-    	addSequential(new NavXDriveForwardDistance(.25, 15));
+    	addSequential(new NavXDriveForwardDistance(.25, 15, false));
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
     	addSequential(new Wait(1.5));
-    		addSequential(new NavXDriveForwardDistance(-0.25, 6));
+    		addSequential(new NavXDriveForwardDistance(-0.25, 6, false));
     	//addSequential(new DriveForward(68), 3);
     	addSequential(new SetGearIntake(0,0));
     	

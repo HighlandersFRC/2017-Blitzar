@@ -77,13 +77,13 @@ public class ControlFlywheel extends Command {
        		// Spooling if near setpoint or setpoint is slower than 1000 RPM
        		if ((Math.abs(flyWheelPower - RobotMap.flywheelMaster.getSpeed()) >= 300) || (flyWheelPower > -1000)) {
        			// Flywheel is spooling
-       			//System.out.println("Flywheel spooling");
+       			System.out.println("Flywheel spooling");
        			RobotMap.flywheelMaster.setP(0.05);
        			RobotMap.flywheelMaster.setI(0);
        			RobotMap.flywheelMaster.setD(0.2);
        		} else {
        			// Flywheel is holding velocity
-       			//System.out.println("Flywheel holding");
+       			System.out.println("Flywheel holding");
        			RobotMap.flywheelMaster.setP(0.13);
        			RobotMap.flywheelMaster.setI(0.0002);
        			RobotMap.flywheelMaster.setD(10);
