@@ -62,7 +62,7 @@ public class ControlGearIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	System.out.println("Execute GI");
+    	//System.out.println("Execute GI");
     	if (positionMode) {
     		
     		RobotMap.gearIntakeRotate.set(getRotatePosition());

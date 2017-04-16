@@ -72,10 +72,10 @@ public class ControlDriveTrain extends Command {
     	}
     	//System.out.println("Current protection scaled to " + minCurrentPercentage);
     	
-    	limitMotorPower(leftMotorOne, OI.joystickOne.getRawAxis(1), minCurrentPercentage);
-    	limitMotorPower(leftMotorTwo, OI.joystickOne.getRawAxis(1), minCurrentPercentage);
-    	limitMotorPower(rightMotorOne, -OI.joystickOne.getRawAxis(5), minCurrentPercentage);
-    	limitMotorPower(rightMotorTwo, -OI.joystickOne.getRawAxis(5), minCurrentPercentage);
+    	limitMotorPower(leftMotorOne, OI.joystickOne.getRawAxis(1) * Math.abs(OI.joystickOne.getRawAxis(1)), minCurrentPercentage);
+    	limitMotorPower(leftMotorTwo, OI.joystickOne.getRawAxis(1) * Math.abs(OI.joystickOne.getRawAxis(1)), minCurrentPercentage);
+    	limitMotorPower(rightMotorOne, -OI.joystickOne.getRawAxis(5) * Math.abs(OI.joystickOne.getRawAxis(5)), minCurrentPercentage);
+    	limitMotorPower(rightMotorTwo, -OI.joystickOne.getRawAxis(5) * Math.abs(OI.joystickOne.getRawAxis(5)), minCurrentPercentage);
     }
 
 	private void setMotorsNoCurrentProtection() {

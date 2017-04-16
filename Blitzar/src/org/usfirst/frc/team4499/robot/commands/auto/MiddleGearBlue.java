@@ -13,13 +13,13 @@ public class MiddleGearBlue extends CommandGroup {
 
     public MiddleGearBlue() {
     	addParallel(new SetGearIntake(-0.55, -0.12));
-    	addSequential(new NavXDriveForwardDistance(.28, 76, true));
+    	addSequential(new NavXDriveForwardDistance(.15, 115, true), 4);
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));
     	addParallel(new SetGearIntake(-0.4, 0));
     	addSequential(new Wait(1.5));
-    	addSequential(new NavXDriveForwardDistance(-0.28, 10, true));
+    	addSequential(new NavXDriveForwardDistance(-0.2, 10, true));
     	addSequential(new SetGearIntake(0,0));
     }
 }

@@ -32,6 +32,24 @@ public class SetFlywheelVelocity extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if ((Math.abs(setVelocity - RobotMap.flywheelMaster.getSpeed()) >= 300) || (setVelocity > -2000)) {
+   			// Flywheel is spooling
+   			//System.out.println("Flywheel spooling");
+   			
+   			RobotMap.flywheelMaster.setP(0.05);
+   			RobotMap.flywheelMaster.setI(0);
+   			RobotMap.flywheelMaster.setD(0.2);
+   			
+   			RobotMap.flywheelMaster.setF(0.0219);
+   		} else {
+   			// Flywheel is holding velocity
+   			//System.out.println("Flywheel holding");
+   			RobotMap.flywheelMaster.setP(0.18); //0.13
+   			RobotMap.flywheelMaster.setI(0.0002); //0.0002
+   			RobotMap.flywheelMaster.setD(5); //10
+   			RobotMap.flywheelMaster.setF(0.0219);
+   		}
+    	
     	RobotMap.flywheelMaster.set(setVelocity);
     	//System.out.println("setpoint " + RobotMap.flywheelMaster.getSetpoint());
     }

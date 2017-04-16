@@ -4,6 +4,7 @@ package org.usfirst.frc.team4499.robot;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -11,6 +12,11 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.followers.EncoderFollower;
+import jaci.pathfinder.modifiers.TankModifier;
 
 import org.usfirst.frc.team4499.robot.commands.*;
 import org.usfirst.frc.team4499.robot.commands.auto.*;
@@ -55,6 +61,15 @@ public class Robot extends IterativeRobot {
 	public static Agitator agitator = new Agitator();
 	public static GearIntake gearIntake = new GearIntake();
 	
+	/////////////////////////////////////////
+	
+	// 3 Waypoints
+	Waypoint[] points = new Waypoint[] {
+			new Waypoint(-1, -1, Pathfinder.d2r(0)),      // Waypoint @ x=-4, y=-1, exit angle=-45 degrees
+		    //new Waypoint(-0.5, -0.5, 0),                        // Waypoint @ x=-2, y=-2, exit angle=0 radians
+		    new Waypoint(0, 0, 0)                           // Waypoint @ x=0, y=0,   exit angle=0 radians
+	};
+
 	
 	
 	//public static Turn turn = new Turn(90, false);
@@ -94,6 +109,46 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	/////////////////////////// MP TEST
+	Trajectory.Config config;
+	Trajectory trajectory;
+	TankModifier modifier;
+	EncoderFollower left;
+	EncoderFollower right;
+	double l;
+	double r;
+	double gyro_heading;
+	double desired_heading;
+	double angleDifference;
+	double turn;
+	
+	class PeriodicRunnable implements java.lang.Runnable {
+	    public void run() { 
+	    	
+	    	l = left.calculate(RobotMap.leftMotorOne.getEncPosition());
+	    	r = right.calculate(RobotMap.rightMotorOne.getEncPosition());
+
+	    	gyro_heading = RobotMap.navx.getYaw();    // Assuming the gyro is giving a value in degrees
+	    	desired_heading = Pathfinder.r2d(left.getHeading());  // Should also be in degrees
+
+	    	angleDifference = Pathfinder.boundHalfDegrees(desired_heading - gyro_heading);
+	    	turn = 0.8 * (-1.0/80.0) * angleDifference;
+
+	    	
+	    	//RobotMap.leftMotorOne.set(l);
+	    	//RobotMap.leftMotorTwo.set(l);
+	    	//RobotMap.rightMotorOne.set(r);
+	    	//RobotMap.rightMotorTwo.set(r); 
+	    	/*
+	    	RobotMap.leftMotorOne.set(l + turn);
+	    	RobotMap.leftMotorTwo.set(l + turn);
+	    	RobotMap.rightMotorOne.set(r - turn);
+	    	RobotMap.rightMotorTwo.set(r - turn); 
+	    	*/
+	    }
+	}
+	///////////////////////////
+	Notifier _notifer = new Notifier(new PeriodicRunnable());
 	
 	@Override
 	public void robotInit() {
@@ -102,10 +157,63 @@ public class Robot extends IterativeRobot {
 		
 		oi = new OI();
 		
+		
+		
 		RobotMap.gearIntakeRotate.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		RobotMap.gearIntakeRotate.setPosition(0);
 		
 		RobotMap.navx.zeroYaw();
+		RobotMap.rightMotorOne.setPosition(0);
+		RobotMap.rightMotorTwo.setPosition(0);
+		RobotMap.leftMotorOne.setPosition(0);
+		RobotMap.leftMotorTwo.setPosition(0);
+		
+		/////////////////////////////////////////////// MP TEST
+		/*
+		// Create the Trajectory Configuration
+		//
+		// Arguments:
+		// Fit Method:          HERMITE_CUBIC or HERMITE_QUINTIC
+		// Sample Count:        SAMPLES_HIGH (100 000)
+		//	                    SAMPLES_LOW  (10 000)
+		//	                    SAMPLES_FAST (1 000)
+		// Time Step:           0.05 Seconds
+		// Max Velocity:        0.5 m/s
+		// Max Acceleration:    2.0 m/s/s
+		// Max Jerk:            60.0 m/s/s/s
+		config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_LOW, 0.05, 0.5, 2.0, 60.0);
+
+		// Generate the trajectory
+		trajectory = Pathfinder.generate(points, config);
+		modifier = new TankModifier(trajectory).modify(0.5);
+		
+		
+		left = new EncoderFollower(modifier.getLeftTrajectory());
+		right = new EncoderFollower(modifier.getRightTrajectory());
+		
+		left.configureEncoder(RobotMap.leftMotorOne.getEncPosition(), 10240, 0.10033);
+		right.configureEncoder(RobotMap.rightMotorOne.getEncPosition(), 10240, 0.10033);
+		left.configurePIDVA(1, 0.0, 0.0, 1 / 1, 0);
+		right.configurePIDVA(1, 0.0, 0.0, 1 / 1, 0);
+		*/
+		////////////////////////////////////////
+		
+		
+		
+		
+		
+		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.turretMotor.setEncPosition(0);
+		RobotMap.turretMotor.setForwardSoftLimit(0.65);
+		RobotMap.turretMotor.setReverseSoftLimit(-3.2);
+		RobotMap.turretMotor.enableForwardSoftLimit(true);
+		RobotMap.turretMotor.enableReverseSoftLimit(true);
+		RobotMap.turretMotor.set(0);
+		RobotMap.turretMotor.setPID(0.5, 0, 0); //try 0.6P and 50 D?
+		RobotMap.turretMotor.setF(2.725); //2.725
+		RobotMap.turretMotor.setVoltageRampRate(1000);
+		
+		
 		/*
 		try {
 			tegra = new Tegra();
@@ -187,7 +295,18 @@ public class Robot extends IterativeRobot {
 		RobotMap.flywheelMaster.setI(0); //0.00022
 		RobotMap.flywheelMaster.setD(0.5); // 1.3	
 		
-	
+		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.turretMotor.setEncPosition(0);
+		RobotMap.turretMotor.setForwardSoftLimit(0.65);
+		RobotMap.turretMotor.setReverseSoftLimit(-3.2);
+		RobotMap.turretMotor.enableForwardSoftLimit(true);
+		RobotMap.turretMotor.enableReverseSoftLimit(true);
+		RobotMap.turretMotor.set(0);
+		RobotMap.turretMotor.setPID(0.5, 0, 0); //try 0.6P and 50 D?
+		RobotMap.turretMotor.setF(2.725); //2.725
+		RobotMap.turretMotor.setVoltageRampRate(1000);
+		
+		
 		RobotMap.navx.zeroYaw();
 		if (AutoChooser.getAuto() != null) {
     	CommandGroup autonomous = AutoChooser.getAuto();
@@ -217,6 +336,8 @@ public class Robot extends IterativeRobot {
 		//SmartDashboard.putNumber("Flywheel velocity", RobotMap.flywheelMaster.getSpeed());
 		//System.out.println(RobotMap.flywheelMaster.getSpeed());
 		//SmartDashboard.putNumber("NavX Yaw in auto " , RobotMap.navx.getYaw());
+		//System.out.println("Right talon following ID " + RobotMap.rightMotorTwo.getSetpoint());
+		System.out.println("Turret position: " + RobotMap.turretMotor.getPosition());
 		Scheduler.getInstance().run();
 	}
 
@@ -226,6 +347,23 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		
+		
+		////////////////// MP TEST
+		
+	//	_notifer.startPeriodic(0.005);
+		
+		/*
+		for (int i = 0; i < trajectory.length(); i++) {
+		    Trajectory.Segment seg = trajectory.get(i);
+		    
+		    System.out.printf("%f,%f,%f,%f,%f,%f,%f,%f\n", 
+		        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
+		            seg.acceleration, seg.jerk, seg.heading);
+		}*/
+		///////////////////
+		
+		
 		
 		//stopVortex.start();
 	//	stopReceiver.start();
@@ -273,9 +411,10 @@ public class Robot extends IterativeRobot {
 		RobotMap.climbMotorTwo.set(0);
 		
 		RobotMap.turretMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.turretMotor.setEncPosition(0);
+		// DO NOT ZERO AT START OF TELEOP, WILL BREAK THINGS
+		//RobotMap.turretMotor.setEncPosition(0);
 		RobotMap.turretMotor.setForwardSoftLimit(0.65);
-		RobotMap.turretMotor.setReverseSoftLimit(-1.5);
+		RobotMap.turretMotor.setReverseSoftLimit(-3.2);
 		RobotMap.turretMotor.enableForwardSoftLimit(true);
 		RobotMap.turretMotor.enableReverseSoftLimit(true);
 		RobotMap.turretMotor.set(0);
@@ -303,19 +442,8 @@ public class Robot extends IterativeRobot {
 		//RobotMap.flywheelMaster.set(-3000);
 		//RobotMap.flywheelMaster.set(-0.5);
 		
-		
-		
-		
-	//	flywheel.controlFlywheelVelocityMP(3600);
-		//flywheelMaster.controlFlywheelVelocityMP(-10);
-		
-		
-		//turn.start();
-		//shootHighAuto.start();
-		//driveStraight.start();
-		
 		// Turret track
-	//	trackTarget.start();
+		//	trackTarget.start();
 		
 		// Auto flywheel speed set
 		//autoFlywheelSpeed.start();
@@ -332,48 +460,20 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-//	System.out.println("fire count " + fireCount);
-		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition() + "roller pos " + RobotMap.gearIntakeRoller.getPosition());
+		//System.out.println("r " + RobotMap.rightMotorOne.getPosition() + " l " + RobotMap.leftMotorOne.getPosition());
+		//System.out.println("Yaw " + RobotMap.navx.getYaw());
+		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition());
+		
+		System.out.println("Turret position: " + RobotMap.turretMotor.getPosition());
 		// Control flywheel
-	//System.out.println("turret pos " + RobotMap.turretMotor.getPosition());
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			flywheel.controlFlywheelVelocity();
 			//flywheel.controlFlywheelPercentVBus();
 		}
-		//System.out.println(RobotMap.turretMotor.getPosition());
-		/*
-		// Control receiver
-		if (oi.receiverSpeedIncrease.get() || oi.receiverSpeedDecrease.get()) {
-			receiver.controlReceiver();
-		}
-		*/
 		
-		// Control vortex
-		/*
-		if (oi.vortexSpeedIncrease.get()) {
-			vortexPower += 0.01;
-		}
-		if (oi.vortexSpeedDecrease.get()){
-			vortexPower -= 0.01;
-		}
-		if (vortexPower > 1) {
-			vortexPower = 1;
-		}
-		if (vortexPower < 0) {
-			vortexPower = 0;
-		}
-		RobotMap.agitatorMotor.set(vortexPower);
-		*/
 		
-		if (oi.unJamShooter.get()) {
-			fireEnabled = false;
-			fireCount = 0;
-			vortex.setVortexPower(1);
-			receiver.setReceiverPower(-1);
-			RobotMap.agitatorMotor.set(-1);
-		}
 		
-		// Vortex and receiver
+		// Shooter mechanisms: Vortex, receiver, agitator
 		if (OI.startFire.get()) {
 			fireEnabled = true;
 		}
@@ -385,15 +485,23 @@ public class Robot extends IterativeRobot {
 				receiver.setReceiverPower(1);
 				RobotMap.agitatorMotor.set(-1);
 			} else {
-			// Run forward
-			vortex.setVortexPower(-.5f);
-			receiver.setReceiverPower(1);
-			RobotMap.agitatorMotor.set(1);
+				// Run forward
+				vortex.setVortexPower(-.5f);
+				receiver.setReceiverPower(1);
+				RobotMap.agitatorMotor.set(1);
 			}
 			fireCount++;
 			if (fireCount % 40 == 0) {
 				fireCount = 0;
 			}
+		}
+		
+		if (oi.unJamShooter.get()) {
+			fireEnabled = false;
+			fireCount = 0;
+			vortex.setVortexPower(1);
+			receiver.setReceiverPower(-1);
+			RobotMap.agitatorMotor.set(-1);
 		}
 		
 		if (oi.stopFire.get()) {
@@ -409,9 +517,7 @@ public class Robot extends IterativeRobot {
 			turret.controlTurretPower();
 		}
 		
-		
-		
-		// Control basin
+		// Control basin pistons
 		if (oi.basinOut.get()) {
 			if (gearPistonOut == true) {
 				RobotMap.basinPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
@@ -428,20 +534,8 @@ public class Robot extends IterativeRobot {
 			basinPistonOut = false;
 		}
 		
-		// gear
+		// Climber piston *old*
 		/*
-		if (oi.gearOut.get()) {
-			RobotMap.gearPiston.set(DoubleSolenoid.Value.kReverse); // Both pistons
-			gearPistonOut = true;
-		}
-		
-		if (oi.gearIn.get()) {
-			RobotMap.gearPiston.set(DoubleSolenoid.Value.kForward); // Both pistons
-			gearPistonOut = false;
-			}
-		*/
-		// climber
-		
 		if (oi.climbPistonOut.get()) {
 			RobotMap.climbPiston.set(DoubleSolenoid.Value.kReverse);
 		}
@@ -449,7 +543,7 @@ public class Robot extends IterativeRobot {
 		if (oi.climbPistonIn.get()) {
 			RobotMap.climbPiston.set(DoubleSolenoid.Value.kForward);
 		}
-		
+		*/
 	
 		
 		
@@ -463,8 +557,8 @@ public class Robot extends IterativeRobot {
 		//turret.controlTurretPositionRelative(0.5);
 		//turret.controlTurretPositionRelative(OI.joystickOne.getRawAxis(5) * 1);
 		
-		// Control climber
 		
+		// Control climber
 		if (oi.joystickOne.getPOV() == 90) {
 			lifterPower += 0.05;
 		}
@@ -485,7 +579,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.climbMotorOne.set(lifterPower);
 		RobotMap.climbMotorTwo.set(lifterPower);
 		/*
-		 //COMP BOT
+		 // Climber with full power, no ramping
 		if (OI.climbFullPower.get()) {
 			RobotMap.climbMotorOne.set(1); //negative
 			RobotMap.climbMotorTwo.set(1); //positive
@@ -493,21 +587,9 @@ public class Robot extends IterativeRobot {
 			RobotMap.climbMotorOne.set(0);
 			RobotMap.climbMotorTwo.set(0);
 		}*/
-		
-		
-		//PRACTICE BOT
-		/*
-		if (OI.climbFullPower.get()) {
-			RobotMap.climbMotorOne.set(1); //negative
-			RobotMap.climbMotorTwo.set(1); //positive
-		} else {
-			RobotMap.climbMotorOne.set(0);
-			RobotMap.climbMotorTwo.set(0);
-		}
-		*/
-		//RobotMap.climbMotorOne.set(0); //negative
-		//RobotMap.climbMotorTwo.set(0); //positive
 	
+		
+		// Code to move turret on DPad
 		/*
 		if (oi.joystickTwo.getPOV() == 90) {
 			turretPower = (float) 0.2;
@@ -519,75 +601,12 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.turretMotor.set(turretPower);
 		*/
-		
-		
-		
-		// Prints twice so that one can be a progress bar, and the other can be a raw value
-		//SmartDashboard.putNumber("Receiver power", -receiverPower);
-		//SmartDashboard.putNumber( "Receiver power value", -receiverPower);
-		//System.out.println("vortexPower " + vortexPower);
-		
-		//System.out.println("Flywheel speed in RPM " + RobotMap.flywheel.getSpeed()); // RPM
-		//System.out.println("Target speed in RPM " + flyWheelPower);
-		//System.out.println("PID error in RPM: " + (RobotMap.flywheel.getClosedLoopError() * 600) / 4096);
-		
-		//System.out.println("PID error: " + RobotMap.flywheel.getClosedLoopError());
-		//System.out.println(RobotMap.flywheel.GetIaccum());
-		//System.out.println("Encoder speed (raw encoder): " + RobotMap.flywheel.getEncVelocity());
-		
-		//System.out.println("Turret position " + RobotMap.turretMotor.getPosition());
-	//	System.out.println("Turret velocity " + RobotMap.turretMotor.getSpeed());
-		
-		//System.out.println(RobotMap.navx.getYaw());
-		//System.out.println("current: " + RobotMap.rightMotorOne.getOutputCurrent() + " voltage: " + RobotMap.rightMotorOne.getOutputVoltage() + " max " + tempMaxCurrent);
-		
-		/*
-		if (RobotMap.rightMotorOne.getOutputCurrent() > tempMaxCurrent) {
-			tempMaxCurrent = (float) RobotMap.rightMotorOne.getOutputCurrent();
-			if (RobotMap.rightMotorTwo.getOutputCurrent() > tempMaxCurrent) {
-				tempMaxCurrent = (float) RobotMap.rightMotorTwo.getOutputCurrent();
-				if (RobotMap.leftMotorOne.getOutputCurrent() > tempMaxCurrent) {
-					tempMaxCurrent = (float) RobotMap.leftMotorOne.getOutputCurrent();
-					if (RobotMap.leftMotorTwo.getOutputCurrent() > tempMaxCurrent) {
-						tempMaxCurrent = (float) RobotMap.leftMotorTwo.getOutputCurrent();
-					}
-				}
-			}
-		}
-		*/
-		//SmartDashboard.putNumber("rightMotorOne Current", RobotMap.rightMotorOne.getOutputCurrent());
-		
-		//SmartDashboard.putNumber("Turret position", RobotMap.turretMotor.getPosition());
+				
 		SmartDashboard.putNumber("NavX Yaw" , RobotMap.navx.getYaw());
 		SmartDashboard.putNumber("Flywheel speed", RobotMap.flywheelMaster.getSpeed());
 		
-		//System.out.println("gear " + gearPistonOut + " basin " + basinPistonOut);
-		//System.out.println("Flywheel position " + RobotMap.flywheel.getPosition());
-		//System.out.println("Flywheel power " + RobotMap.flywheelMaster.getOutputVoltage());
-	//	System.out.println("Tegra distance " + Tegra.distance);
-		
-		/*if (Math.abs(RobotMap.turretMotor.getSpeed()) > 55) {
-    		System.out.println("Ended timer");
-    		System.out.println("Timer: " + Timer.getFPGATimestamp());
-    		System.out.println("Current acceleration: " + ((RobotMap.turretMotor.getSpeed() - previousVelocity) / (Timer.getFPGATimestamp() - previousTime)) );
-    		System.out.println(startTime - Timer.getFPGATimestamp());
-    	}
-		
-		previousVelocity = RobotMap.turretMotor.getSpeed();
-    	previousTime = Timer.getFPGATimestamp();*/
-		
-		//System.out.println("Tegra Y " + Tegra.y);
-		//System.out.println("Right encoder speed " + RobotMap.rightMotorOne.getSpeed());
-		//System.out.println("Left encoder speed " + RobotMap.leftMotorOne.getSpeed());
-		
-		// Encoder sees 50 rotations, wheel turns 22 times
-		
-	//	System.out.println("Left trigger: " + OI.joystickOne.getRawAxis(2) + " Right trigger: " + OI.joystickOne.getRawAxis(3));
-		
 		//System.out.println("Right Pos " + RobotMap.rightMotorOne.getPosition() + " Left Pos " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Right side no enc " + RobotMap.rightMotorTwo.getPosition() + " Left side no enc " + RobotMap.leftMotorTwo.getPosition());
-		//System.out.println("Left Encoder Position " + RobotMap.leftMotorOne.getPosition());
-		//System.out.println("gear intake current draw " + RobotMap.gearIntakeRotate.getOutputCurrent());
 		Scheduler.getInstance().run();
 	}
 

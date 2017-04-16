@@ -2,6 +2,9 @@ package org.usfirst.frc.team4499.robot.commands;
 
 import org.usfirst.frc.team4499.robot.Robot;
 import org.usfirst.frc.team4499.robot.RobotMap;
+
+import com.ctre.CANTalon.TalonControlMode;
+
 import org.usfirst.frc.team4499.robot.OI;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,21 +25,23 @@ public class ControlTurret extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	RobotMap.turretMotor.changeControlMode(TalonControlMode.PercentVbus);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
     	if (OI.turretPanLeft.get()) {
-    		setPower = (float) -0.3; // Left = negative
+    		setPower = (float) -0.25; // Left = negative
     		//System.out.println("Negative throttle");
 		} else if (OI.turretPanRight.get()) {
-			setPower = (float) +0.3; // Right = positive 
+			setPower = (float) +0.25; // Right = positive 
 			//System.out.println("Positive throttle");
 		} else {
 			setPower = 0;
 		}
 		
+    	//System.out.println("Set turret to " + setPower);
     	
     	/*
     	if (OI.joystickTwo.getPOV() == 90) {

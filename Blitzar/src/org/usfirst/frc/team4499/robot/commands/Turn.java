@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
-	private double kI = 0.0004; //0.0002
- 	private double kP = 0.02; //0.02
-	private double kD = 0.05; //0.05
+	private double kI = 0.0003; //
+ 	private double kP = 0.014; // 
+	private double kD = 0; //
 	private double kIZone = Double.MAX_VALUE;
 	private double target = 0;
 	private int whichWay = 0;
@@ -22,12 +22,12 @@ public class Turn extends Command {
 	float outdatedYawPlaceholder;
 	
 	double startingAngle;
-	Preferences prefs;
+//	Preferences prefs;
 	PID orientation = new PID(kP,kI,kD, kIZone);
 	public Turn (double degrees, boolean absolute){
 		
-		orientation.setMaxOutput(0.5);
-		orientation.setMinOutput(-0.5);
+		orientation.setMaxOutput(.5); 
+		orientation.setMinOutput(-.5); 
 		orientation.setContinuous(true);
 		orientation.setMaxInput(360);
 		orientation.setMinInput(0);
@@ -92,8 +92,8 @@ public class Turn extends Command {
 		previousYawPlaceholder = previousYaw;
 		outdatedYawPlaceholder = outdatedYaw;
 		
-		boolean outdatedYawInRange = Math.abs(target - outdatedYaw) < 1;
-		boolean previousYawInRange = Math.abs(target - previousYaw) < 1;
+		boolean outdatedYawInRange = Math.abs(target - outdatedYaw) < .5;
+		boolean previousYawInRange = Math.abs(target - previousYaw) < .5;
 		boolean yawInRange = Math.abs(target - RobotMap.navx.getYaw()) < 0.5;
 		
 		outdatedYaw = previousYaw;
@@ -119,6 +119,7 @@ public class Turn extends Command {
 		RobotMap.rightMotorOne.set(0);
 		RobotMap.rightMotorTwo.set(0);
 		System.out.println("Finished turn");
+		
 	}
 	
 }

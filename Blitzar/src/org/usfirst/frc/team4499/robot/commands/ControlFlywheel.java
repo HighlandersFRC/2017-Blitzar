@@ -72,21 +72,25 @@ public class ControlFlywheel extends Command {
    //// Control when in Speed Mode
     	
        	if (talonControlMode == CANTalon.TalonControlMode.Speed) {
-       		
+       		//System.out.println("Speed - " + RobotMap.flywheelMaster.getSpeed());
        		// Is the flywheel spooling or holding a speed?
        		// Spooling if near setpoint or setpoint is slower than 1000 RPM
-       		if ((Math.abs(flyWheelPower - RobotMap.flywheelMaster.getSpeed()) >= 300) || (flyWheelPower > -1000)) {
+       		if ((Math.abs(flyWheelPower - RobotMap.flywheelMaster.getSpeed()) >= 300) || (flyWheelPower > -2000)) {
        			// Flywheel is spooling
-       			System.out.println("Flywheel spooling");
+       			//System.out.println("Flywheel spooling");
+       			
        			RobotMap.flywheelMaster.setP(0.05);
        			RobotMap.flywheelMaster.setI(0);
        			RobotMap.flywheelMaster.setD(0.2);
+       			
+       			RobotMap.flywheelMaster.setF(0.0219);
        		} else {
        			// Flywheel is holding velocity
-       			System.out.println("Flywheel holding");
-       			RobotMap.flywheelMaster.setP(0.13);
-       			RobotMap.flywheelMaster.setI(0.0002);
-       			RobotMap.flywheelMaster.setD(10);
+       			//System.out.println("Flywheel holding");
+       			RobotMap.flywheelMaster.setP(0.18); //0.13
+       			RobotMap.flywheelMaster.setI(0.0002); //0.0002
+       			RobotMap.flywheelMaster.setD(5); //10
+       			RobotMap.flywheelMaster.setF(0.0219);
        		}
        		
        		

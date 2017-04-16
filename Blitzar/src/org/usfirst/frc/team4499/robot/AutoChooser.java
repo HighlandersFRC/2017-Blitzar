@@ -28,8 +28,19 @@ public class AutoChooser {
 			// Left Gear Red Auto
 			defense = new LeftGearRedAuto();
 			System.out.println("Left Gear Red Auto");
-		}
 		
+		}
+		else if(OI.dialFour.get()){
+			// Left Gear Red Auto
+			defense = new ShootBlue();
+			System.out.println("Left Gear Red Auto");
+		
+		}
+		else if(OI.dialFour.get()){
+			// Left Gear Red Auto
+			defense = new ShootBlue();
+			System.out.println("Left Gear Red Auto");
+		}
 		///////////////////////////
 		
 		// BLUE SIDE AUTOS
