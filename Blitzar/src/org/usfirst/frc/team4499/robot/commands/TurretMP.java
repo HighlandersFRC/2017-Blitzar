@@ -31,11 +31,11 @@ public class TurretMP extends Command {
     protected void initialize() {
     	//RobotMap.turretMotor.disable();
     	RobotMap.turretMotor.changeControlMode(TalonControlMode.MotionMagic);
-    	RobotMap.turretMotor.setPID(0.45, 0.003, 0);
+    	RobotMap.turretMotor.setPID(0.18, 0.005, 0);
     	//RobotMap.turretMotor.setF(0.2);
     	RobotMap.turretMotor.setAllowableClosedLoopErr(0);
-    	RobotMap.turretMotor.setMotionMagicCruiseVelocity(320); //max 420
-    	RobotMap.turretMotor.setMotionMagicAcceleration(1500);
+    	RobotMap.turretMotor.setMotionMagicCruiseVelocity(170); //max 420
+    	RobotMap.turretMotor.setMotionMagicAcceleration(220);
     	RobotMap.turretMotor.configNominalOutputVoltage(0, 0);
     	RobotMap.turretMotor.configPeakOutputVoltage(12, -12);
     	//RobotMap.turretMotor.clearMotionProfileTrajectories();

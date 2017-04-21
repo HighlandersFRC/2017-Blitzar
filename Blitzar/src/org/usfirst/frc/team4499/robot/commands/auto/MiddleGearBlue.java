@@ -19,20 +19,21 @@ public class MiddleGearBlue extends CommandGroup {
     public MiddleGearBlue() {
     	addParallel(new SetGearIntake(-0.55, -0.12));
     	
-    	addParallel(new SetFlywheelVelocity(-4250));
-    	addSequential(new TurretMP(-3.2));
+    	addParallel(new SetFlywheelVelocity(-4280));
+    	addSequential(new TurretMP(-3.2), 2);
     	
     	addParallel(new SetVortexPower(-.8f));
     	addParallel(new SetReceiverPower(1));
     	addParallel(new SetAgitatorPower(1));
-    	addSequential(new Wait(4.5));
+    	addSequential(new Wait(4));
+    	addParallel(new TurretMP(0));
     	addParallel(new SetVortexPower(0));
     	addParallel(new SetReceiverPower(0));
     	addParallel(new SetAgitatorPower(0));
     	addParallel(new SetFlywheelVelocity(0));
     	
     	
-    	addSequential(new NavXDriveForwardDistance(.15, 115, true), 4);
+    	addSequential(new NavXDriveForwardDistance(.15, 115, true),4);
     	addSequential(new Wait(0.2));
     	addParallel(new SetGearIntake(-0.4, 1));
     	addSequential(new Wait(0.5));

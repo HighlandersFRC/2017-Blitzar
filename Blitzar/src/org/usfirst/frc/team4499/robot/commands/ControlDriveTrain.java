@@ -14,7 +14,7 @@ import com.ctre.CANTalon.TalonControlMode;
  */
 public class ControlDriveTrain extends Command {
 
-	private static final int CURRENT_LIMIT = 40;
+	private static final int CURRENT_LIMIT = 38;
 	private static final int MAX_CURRENT_OFF_COUNT = 3;
 	private CANTalon rightMotorOne;
 	private CANTalon rightMotorTwo;

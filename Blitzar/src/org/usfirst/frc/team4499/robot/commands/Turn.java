@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Turn extends Command {
-	private double kI = 0.0003; //
- 	private double kP = 0.014; // 
+	private double kI = 0.0001; //
+ 	private double kP = 0.008; // 
 	private double kD = 0; //
-	private double kIZone = Double.MAX_VALUE;
+	private double kIZone = 20;
 	private double target = 0;
 	private int whichWay = 0;
 	private boolean absolute;

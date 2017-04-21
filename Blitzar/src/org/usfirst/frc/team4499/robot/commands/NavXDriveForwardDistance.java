@@ -19,7 +19,7 @@ public class NavXDriveForwardDistance extends Command {
 	private double distance;
 	private double firstDistance;
 	private double startAngle;
-	private double kp = 0.025;
+	private double kp = 0.013;
 	private double ki = 0.0001;
 	private double kd = 0;
 	private double wheelCircumference = 12.40929098167968;
@@ -33,7 +33,7 @@ public class NavXDriveForwardDistance extends Command {
     	//this.distance = distance*485; comp bot
     	//this.distance = distance * 673.87;
     	this.rotations = distance/wheelCircumference;
-    	this.distance =  this.rotations*2.272727*4096;
+    	this.distance =  this.rotations*1.51*4096;
     	this.speed = speed;
     	this.firstDistance = this.distance * .5;
     	this.rampUp = shouldRamp;
@@ -90,8 +90,8 @@ public class NavXDriveForwardDistance extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if (Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-
-    			(RobotMap.rightMotorOne.getEncPosition()))/2.0)<this.firstDistance) {
-    	//		(RobotMap.rightMotorTwo.getEncPosition()))/2.0)<this.firstDistance) { comp bot
+    	//		(RobotMap.rightMotorOne.getEncPosition()))/2.0)<this.firstDistance) {
+    			(RobotMap.rightMotorTwo.getEncPosition()))/2.0)<this.firstDistance) {
     			
     		setMotorPowerNavXPID(2.5);
     	} else {
@@ -110,8 +110,8 @@ public class NavXDriveForwardDistance extends Command {
 		
 		RobotMap.rightMotorOne.set(-orientation.getResult()+speed*multiplier);
 		RobotMap.rightMotorTwo.set(-orientation.getResult()+speed*multiplier);
-		//System.out.println("Left"+RobotMap.leftMotorOne.getEncPosition());
-		//System.out.println("Right"+RobotMap.rightMotorTwo.getEncPosition());
+		System.out.println("Left"+RobotMap.leftMotorOne.getEncPosition());
+		System.out.println("Right"+RobotMap.rightMotorTwo.getEncPosition());
 	}
 
     // Make this return true when this Command no longer needs to run execute()
@@ -119,7 +119,7 @@ public class NavXDriveForwardDistance extends Command {
    //     return startTime + time <= Timer.getFPGATimestamp();
     	
     	// comp bot return Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-(RobotMap.rightMotorTwo.getEncPosition()))/2.0)>this.distance; 
-    	 return Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-(RobotMap.rightMotorOne.getEncPosition()))/2.0)>this.distance;
+    	 return Math.abs((double)((RobotMap.leftMotorOne.getEncPosition())-(RobotMap.rightMotorTwo.getEncPosition()))/2.0)>this.distance;
     }
 
     // Called once after isFinished returns true

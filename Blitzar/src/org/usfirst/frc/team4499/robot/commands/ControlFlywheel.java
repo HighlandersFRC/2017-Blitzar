@@ -87,7 +87,7 @@ public class ControlFlywheel extends Command {
        		} else {
        			// Flywheel is holding velocity
        			//System.out.println("Flywheel holding");
-       			RobotMap.flywheelMaster.setP(0.18); //0.13
+       			RobotMap.flywheelMaster.setP(0.19); //0.13
        			RobotMap.flywheelMaster.setI(0.0002); //0.0002
        			RobotMap.flywheelMaster.setD(5); //10
        			RobotMap.flywheelMaster.setF(0.0219);

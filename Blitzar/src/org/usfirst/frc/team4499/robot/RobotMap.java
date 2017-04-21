@@ -44,6 +44,8 @@ public class RobotMap {
 	
 	public static DCMotor gearIntakeRotate = new DCMotor(13);
 	public static DCMotor gearIntakeRoller = new DCMotor(14);
+	public static CANTalon ballIndexer = new CANTalon(15);
+
 	
 	public static AHRS navx = new AHRS(SerialPort.Port.kMXP);
 	

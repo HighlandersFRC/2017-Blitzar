@@ -91,7 +91,7 @@ public class OI {
 	
 	// Vortex
 //	public static JoystickButton vortexSpeedDecrease = new JoystickButton(joystickTwo, 3); // X
-	public static JoystickButton gearRoller= new JoystickButton(joystickTwo,3);
+	public static JoystickButton gearRoller = new JoystickButton(joystickTwo,3);
 	public static JoystickButton unJamShooter = new JoystickButton(joystickTwo, 2); // B
 	
 	// Vortex and Receiver

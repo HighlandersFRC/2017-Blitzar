@@ -463,8 +463,8 @@ public class Robot extends IterativeRobot {
 		//System.out.println("r " + RobotMap.rightMotorOne.getPosition() + " l " + RobotMap.leftMotorOne.getPosition());
 		//System.out.println("Yaw " + RobotMap.navx.getYaw());
 		//System.out.println("Position of gear rotate: " + RobotMap.gearIntakeRotate.getPosition());
-		
-		System.out.println("Turret position: " + RobotMap.turretMotor.getPosition());
+	
+		//System.out.println("Turret position: " + RobotMap.turretMotor.getPosition());
 		// Control flywheel
 		if (oi.flyWheelSpeedIncrease.get() || oi.flyWheelSpeedDecrease.get()) {
 			flywheel.controlFlywheelVelocity();
@@ -482,12 +482,14 @@ public class Robot extends IterativeRobot {
 			if (fireCount > 20 && fireCount <= 40) {
 				// Run reverse
 				vortex.setVortexPower(-.5f);
-				receiver.setReceiverPower(1);
+				receiver.setReceiverPower((float) 0.75);
+				RobotMap.ballIndexer.set(-0.75);
 				RobotMap.agitatorMotor.set(-1);
 			} else {
 				// Run forward
 				vortex.setVortexPower(-.5f);
-				receiver.setReceiverPower(1);
+				receiver.setReceiverPower((float) 0.75);
+				RobotMap.ballIndexer.set(-0.75);
 				RobotMap.agitatorMotor.set(1);
 			}
 			fireCount++;
@@ -502,6 +504,7 @@ public class Robot extends IterativeRobot {
 			vortex.setVortexPower(1);
 			receiver.setReceiverPower(-1);
 			RobotMap.agitatorMotor.set(-1);
+			RobotMap.ballIndexer.set(1);
 		}
 		
 		if (oi.stopFire.get()) {
@@ -510,6 +513,7 @@ public class Robot extends IterativeRobot {
 			vortex.setVortexPower(0);
 			receiver.setReceiverPower(0);
 			RobotMap.agitatorMotor.set(0);
+			RobotMap.ballIndexer.set(0);
 		}
 		
 		// Control turret
