@@ -1,5 +1,7 @@
-/bin/
-/dist/
-/build/
-.metadata/
+\bin
+\dist
+\build
+.metadata
+\.classpath
+\sysProps.xml
 *~

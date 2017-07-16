@@ -40,17 +40,81 @@ public class OI {
 	
 	///////////////////////////////////////////////////////////////////////////////////
 	
+	
+	
+	// Pilot
+	// Drive train, climber
+	
 	public static Joystick joystickOne = new Joystick(0);
+
 	
-	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickOne, 4);
-	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickOne, 1);
-	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickOne, 2);
-	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickOne, 3);
+	// Climber piston
+	public static JoystickButton climbPistonOut = new JoystickButton(joystickOne, 6); // Right bumper
+	public static JoystickButton climbPistonIn = new JoystickButton(joystickOne, 5); // Left bumper
+	
+	// Basin
+	public static JoystickButton basinOut = new JoystickButton(joystickOne, 2); // B
+	public static JoystickButton basinIn = new JoystickButton(joystickOne, 3); // X
+	//public static JoystickButton basinOut = new JoystickButton(joystickOne, 7); // Select
+	//public static JoystickButton basinIn = new JoystickButton(joystickOne, 8); // Start
 	
 	
+	//gear
+	//public static JoystickButton gearOut = new JoystickButton(joystickOne, 7); // Select
+	//public static JoystickButton gearIn = new JoystickButton(joystickOne, 8); // Start
+	//gear rotate up on dpad
+	//gear rotate down on dpad
+	
+	/////////
 	
 	
+	// Co pilot
+	// Turret control
+	// Flywheel, Turret, Receiver, Vortex
 	
+	public static Joystick joystickTwo = new Joystick(1);
+	
+	public static JoystickButton zeroGearIntakeRotate = new JoystickButton(joystickTwo, 3); // X
+	
+	
+	// Flywheel 
+	public static JoystickButton flyWheelSpeedDecrease = new JoystickButton(joystickTwo, 1); // A
+	public static JoystickButton flyWheelSpeedIncrease = new JoystickButton(joystickTwo, 4); // Y
+	
+	// Receiver
+	public static JoystickButton receiverSpeedDecrease = new JoystickButton(joystickTwo, 7); // Back
+	public static JoystickButton receiverSpeedIncrease = new JoystickButton(joystickTwo, 8); // Start
+	
+	// Turret
+	public static JoystickButton turretPanRight = new JoystickButton(joystickTwo, 6); // Right bumper
+	public static JoystickButton turretPanLeft = new JoystickButton(joystickTwo, 5); // Left bumper
+	
+	// Vortex
+//	public static JoystickButton vortexSpeedDecrease = new JoystickButton(joystickTwo, 3); // X
+	public static JoystickButton gearRoller = new JoystickButton(joystickTwo,3);
+	public static JoystickButton unJamShooter = new JoystickButton(joystickTwo, 2); // B
+	
+	// Vortex and Receiver
+	public static JoystickButton startFire = new JoystickButton(joystickTwo, 8);
+	public static JoystickButton stopFire = new JoystickButton(joystickTwo, 7);
+	
+	// Flywheel quick set
+	public static JoystickButton setZeroVelocity = new JoystickButton(joystickTwo, 9);
+	public static JoystickButton setShootVelocity = new JoystickButton(joystickTwo, 10);
+	////////
+	
+	// Dial/switch box
+	public static Joystick dial = new Joystick(2);
+	public static JoystickButton dialOne = new JoystickButton(dial,1);
+	public static JoystickButton dialTwo = new JoystickButton(dial,2);
+	public static JoystickButton dialThree = new JoystickButton(dial,3);
+	public static JoystickButton dialFour = new JoystickButton(dial,4);
+	public static JoystickButton dialFive = new JoystickButton(dial,5);
+	public static JoystickButton switchOne = new JoystickButton(dial, 6);
+	public static JoystickButton switchTwo = new JoystickButton(dial, 7);
+	public static JoystickButton switchThree = new JoystickButton(dial, 8);
+	// GearIntake 
+
 	
 	
 }
