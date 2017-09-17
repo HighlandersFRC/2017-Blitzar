@@ -520,7 +520,7 @@ public class Robot extends IterativeRobot {
 		if (oi.turretPanLeft.get() || oi.turretPanRight.get()) {
 			turret.controlTurretPower();
 		}
-		
+		// TIm Frye
 		// Control basin pistons
 		if (oi.basinOut.get()) {
 			if (gearPistonOut == true) {
